@@ -1,10 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Market Wait List</title>
+</head>
 <body>
-  <h1>main page</h1>
+    <h1>Market Wait List</h1>
+    <p id="apiRequestTime"></p> <!-- Placeholder for displaying API request time -->
+    <table>
+        <thead>
+            <tr>
+                <th>Item ID</th>
+                <th>Enhancement Level</th>
+                <th>Price</th>
+                <th>Timestamp</th>
+            </tr>
+        </thead>
+        <tbody id="marketWaitList">
+            <!-- Data will be populated here dynamically -->
+        </tbody>
+    </table>
+    <script>
+        // Function to get current date and time
+        const getCurrentDateTime = () => {
+            const now = new Date();
+            const dateTimeString = now.toLocaleString('ko-KR');
+            return dateTimeString;
+        };
 
-  <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. 
-      Atque, ullam quos! Iste quae, molestiae vitae tenetur, 
-      in a aperiam voluptatibus dicta qui doloribus libero suscipit optio delectus voluptas voluptatem impedit!</p>
-     
-      <script src = "main.js"></script>
+        // Display API request time
+        const apiRequestTime = document.getElementById('apiRequestTime');
+        apiRequestTime.textContent = `거래소 갱신 시간 : ${getCurrentDateTime()}`;
+
+        // Fetch Market Wait List from the server
+        fetch('/marketWaitList')
+            .then(response => response.json())
+            .then(data => {
+                // Extracting data from the response message
+                const resultMsg = data.resultMsg;
+                const items = resultMsg.split('|').map(item => item.split('-'));
+
+                // Rendering data in HTML table
+                const marketWaitList = document.getElementById('marketWaitList');
+                items.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item[0]}</td>
+                        <td>${item[1]}</td>
+                        <td>${item[2]}</td>
+                        <td>${new Date(Number(item[3]) * 1000).toLocaleString('ko-KR')}</td> <!-- Convert Unix timestamp to milliseconds -->
+                    `;
+                    marketWaitList.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching market wait list:', error);
+                // Display an error message on the page
+                const errorMessage = document.createElement('p');
+                errorMessage.textContent = 'Error fetching market wait list. Please try again later.';
+                document.body.appendChild(errorMessage);
+            });
+    </script>
 </body>
 </html>
