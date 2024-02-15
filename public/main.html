@@ -7,7 +7,6 @@
 </head>
 <body>
     <h1>거래 대기 목록</h1>
-    <p id="timestampDisplay"></p> 
     <table>
         <thead>
             <tr>
@@ -22,38 +21,25 @@
         </tbody>
     </table>
     <script>
-        // 현재 날짜와 시간을 가져오는 함수
-        const getCurrentDateTime = () => {
-            const now = new Date();
-            const dateTimeString = now.toLocaleString('ko-KR');
-            return dateTimeString;
-        };
-
         // 서버에서 거래 대기 목록 가져오기
         fetch('/marketWaitList')
             .then(response => response.json())
             .then(data => {
                 // 응답 메시지에서 데이터 추출
                 const marketWaitListData = data.data;
-                const timestamp = data.timestamp;
-                const items = marketWaitListData.resultMsg.split('|').map(item => item.split('-'));
 
                 // HTML 테이블에 데이터 표시
                 const marketWaitList = document.getElementById('marketWaitList');
-                items.forEach(item => {
+                marketWaitListData.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${item[0]}</td>
-                        <td>${item[1]}</td>
-                        <td>${item[2]}</td>
-                        <td>${new Date(Number(item[3]) * 1000).toLocaleString('ko-KR')}</td> <!-- 유닉스 타임스탬프를 밀리초로 변환 -->
+                        <td>${item['Item ID']}</td>
+                        <td>${item['Enhancement Level']}</td>
+                        <td>${item['Price']}</td>
+                        <td>${new Date(item['Timestamp when item hits the market']).toLocaleString('ko-KR')}</td>
                     `;
                     marketWaitList.appendChild(row);
                 });
-
-                // 시간 표시
-                const timestampDisplay = document.getElementById('timestampDisplay');
-                timestampDisplay.textContent = `거래소 조회 시간 : ${timestamp}`;
             })
             .catch(error => {
                 console.error('거래 대기 목록을 가져오는 중 오류 발생:', error);

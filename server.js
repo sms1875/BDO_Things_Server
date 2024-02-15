@@ -11,4 +11,4 @@ const connPool = new sql.ConnectionPool(config.dbconfig)
     console.log('err ', err);
   });
 
-module.exports = connPool;
+module.exports = { sql,connPool };

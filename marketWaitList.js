@@ -1,28 +1,18 @@
 const express = require('express');
-const fs = require('fs');
-const { tmpFilePath } = require('./dataFetcher'); // Require tmpFilePath from dataFetcher.js
-
+const { connPool } = require('./server'); // Require tmpFilePath from dataFetcher.js
 const router = express.Router();
-
-let marketWaitListData = null; // Variable to store market wait list data
-
-try {
-    // Read marketWaitListData from marketWaitListData.json file
-    marketWaitListData = JSON.parse(fs.readFileSync(tmpFilePath, 'utf8')).data;
-} catch (error) {
-    console.error('Error reading marketWaitListData from file:', error);
-}
 
 router.get('/marketWaitList', async function (req, res) {
     try {
-        // If marketWaitListData is available, send it along with the timestamp from JSON data
-        if (marketWaitListData) {
-            // Get the timestamp from the JSON data
-            const timestamp = JSON.parse(fs.readFileSync(tmpFilePath, 'utf8')).timestamp;
-            res.status(200).json({ data: marketWaitListData, timestamp: timestamp });
-        } else {
-            res.status(500).json({ error: 'Market wait list data not available' });
-        }
+        const query = await connPool;
+
+        const request = await query.request().query(`
+            SELECT [Item ID], [Enhancement Level], [Price], [Timestamp when item hits the market]
+            FROM [bdo_thinsg].[dbo].[거래소 등록대기]
+        `);
+
+        // Send the fetched data as response
+        res.status(200).json({ data: request.recordset /* 테이블 수정 시간 추가필요 */});
     } catch (error) {
         console.error('Error fetching market wait list data:', error);
         res.status(500).json({ error: 'Error fetching market wait list data' });

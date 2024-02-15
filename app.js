@@ -2,6 +2,8 @@ const express = require('express');
 const { connPool } = require('./server'); // Require tmpFilePath from dataFetcher.js
 const app = express();
 const marketWaitListRouter = require('./marketWaitList'); // Import marketWaitList router
+const { fetchAndSaveMarketWaitListData } = require('./datafetcher'); // Import fetchAndSaveMarketWaitListData function
+
 
 connPool;
 
