@@ -1,64 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Market Wait List</title>
+    <title>거래 대기 목록</title>
 </head>
 <body>
-    <h1>Market Wait List</h1>
-    <p id="apiRequestTime"></p> <!-- Placeholder for displaying API request time -->
+    <h1>거래 대기 목록</h1>
     <table>
         <thead>
             <tr>
-                <th>Item ID</th>
-                <th>Enhancement Level</th>
-                <th>Price</th>
-                <th>Timestamp</th>
+                <th>아이템 ID</th>
+                <th>강화 레벨</th>
+                <th>가격</th>
+                <th>시간</th>
             </tr>
         </thead>
         <tbody id="marketWaitList">
-            <!-- Data will be populated here dynamically -->
+            <!-- 데이터는 여기에 동적으로 삽입됨 -->
         </tbody>
     </table>
     <script>
-        // Function to get current date and time
-        const getCurrentDateTime = () => {
-            const now = new Date();
-            const dateTimeString = now.toLocaleString('ko-KR');
-            return dateTimeString;
-        };
-
-        // Display API request time
-        const apiRequestTime = document.getElementById('apiRequestTime');
-        apiRequestTime.textContent = `거래소 갱신 시간 : ${getCurrentDateTime()}`;
-
-        // Fetch Market Wait List from the server
+        // 서버에서 거래 대기 목록 가져오기
         fetch('/marketWaitList')
             .then(response => response.json())
             .then(data => {
-                // Extracting data from the response message
-                const resultMsg = data.resultMsg;
-                const items = resultMsg.split('|').map(item => item.split('-'));
+                // 응답 메시지에서 데이터 추출
+                const marketWaitListData = data.data;
 
-                // Rendering data in HTML table
+                // HTML 테이블에 데이터 표시
                 const marketWaitList = document.getElementById('marketWaitList');
-                items.forEach(item => {
+                marketWaitListData.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td>${item[0]}</td>
-                        <td>${item[1]}</td>
-                        <td>${item[2]}</td>
-                        <td>${new Date(Number(item[3]) * 1000).toLocaleString('ko-KR')}</td> <!-- Convert Unix timestamp to milliseconds -->
+                        <td>${item['Item ID']}</td>
+                        <td>${item['Enhancement Level']}</td>
+                        <td>${item['Price']}</td>
+                        <td>${new Date(item['Timestamp when item hits the market']).toLocaleString('ko-KR')}</td>
                     `;
                     marketWaitList.appendChild(row);
                 });
             })
             .catch(error => {
-                console.error('Error fetching market wait list:', error);
-                // Display an error message on the page
+                console.error('거래 대기 목록을 가져오는 중 오류 발생:', error);
+                // 페이지에 오류 메시지 표시
                 const errorMessage = document.createElement('p');
-                errorMessage.textContent = 'Error fetching market wait list. Please try again later.';
+                errorMessage.textContent = '거래 대기 목록을 가져오는 중 오류가 발생했습니다. 나중에 다시 시도하세요.';
                 document.body.appendChild(errorMessage);
             });
     </script>
