@@ -17,7 +17,7 @@ router.get('/marketWaitList', async function (req, res) {
         const request = await query.request().execute('[bdo_thinsg].[dbo].[GetMarketWaitListData]');
 
         // 가져온 데이터를 응답합니다.
-        res.status(200).json({ data: request.recordset /* + 테이블 수정 시간 추가 */});
+        res.status(200).json({ data: request.recordset /* + 테이블 수정 시간 추가 */});  
     } catch (error) {
         console.error('거래소 대기 상품 목록을 가져오는 중 에러 발생:', error);
         res.status(500).json({ error: '거래소 대기 상품 목록을 가져오는 중 에러 발생' });
