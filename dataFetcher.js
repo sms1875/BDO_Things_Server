@@ -1,18 +1,15 @@
-const { connPool } = require('./server'); // Require tmpFilePath from dataFetcher.js
+const { connPool, sql } = require('./server'); // Require tmpFilePath from dataFetcher.js
 
 const fetchAndSaveMarketWaitListData = async () => {
   try {
     const MarketApi = require('./MarketApi');
     const marketWaitList = await MarketApi.getWorldMarketWaitList();
+    const query = await connPool;
 
     if (marketWaitList) {
-      console.log(marketWaitList);
       
       // Clear the existing data in the table
-      const clearQuery = await connPool;
-      await clearQuery.request().query(`
-        DELETE FROM [bdo_thinsg].[dbo].[거래소 등록대기]
-      `);
+      await query.request().execute('[bdo_thinsg].[dbo].[ClearMarketWaitListData]');
 
       // Split the resultMsg into individual items
       const items = marketWaitList.resultMsg.split('|');
@@ -26,11 +23,13 @@ const fetchAndSaveMarketWaitListData = async () => {
           // Convert Unix timestamp to datetime
           const datetime = new Date(Number(unixTimestamp) * 1000).toISOString().replace(/T/, ' ').replace(/\..+/, '');
 
-          const query = await connPool;
-          const request = await query.request().query(`
-            INSERT INTO [bdo_thinsg].[dbo].[거래소 등록대기] ([Item ID], [Enhancement Level], [Price], [Timestamp when item hits the market])
-            VALUES (${itemId}, ${enhancementLevel}, ${price}, '${datetime}')
-          `);
+          // Call the stored procedure to add data to the table
+          await query.request()
+            .input('itemId', sql.Int, itemId)
+            .input('enhancementLevel', sql.Int, enhancementLevel)
+            .input('price', sql.BigInt, price)
+            .input('datetime', sql.DateTime, new Date(datetime))
+            .execute('[bdo_thinsg].[dbo].[AddMarketWaitListData]');
         }
       }
 
