@@ -7,6 +7,7 @@ const schedule = require('./src/schedule/schedule');
 // 스케줄러를 시작합니다.
 schedule.start();
 
+
 // Use marketWaitList router for '/marketWaitList' route
 app.use('/', marketWaitListRouter);
 app.use('/', getWorldMarketSearchList);
