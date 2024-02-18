@@ -9,7 +9,7 @@ const router = express.Router();
  * - 데이터베이스에서 거래소 대기 상품 목록을 조회하여 응답합니다.
  * - 저장 프로시저를 사용하여 데이터를 가져옵니다.
  */
-router.get('/marketWaitList', async function (req, res) {
+router.get('/getMarketWaitList', async function (req, res) {
     try {
         const query = await connPool;
 

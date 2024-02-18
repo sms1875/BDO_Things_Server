@@ -2,14 +2,17 @@ const express = require('express');
 const router = express.Router();
 const { connPool, sql } = require('../../db/dbConnect');
 
-// Add middleware to parse JSON-encoded bodies
-router.use(express.json());
-
+/**
+ * 거래소 대기 상품 목록을 가져와 응답합니다.
+ * 
+ * @description
+ * - 가공 무역 레시피 정보를 가져옵니다
+ */
 router.post('/getDesignDetails', async (req, res) => {
   try {
     const query = await connPool;
     const result = await query.request().execute('[bdo_thinsg].[dbo].[GetDesignDetails]');
-    console.log(processDesignDetails(result.recordset));
+
     res.status(200).json(processDesignDetails(result.recordset));
   } catch (error) {
     console.error('Error getting world market search list:', error);

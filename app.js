@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const marketWaitListRouter = require('./src/routes/marketWaitList'); 
+const marketWaitListRouter = require('./src/routes/getMarketWaitList'); 
 const getWorldMarketSearchList = require('./src/routes/getWorldMarketSearchList')
 const getDesignDetails = require('./src/routes/getDesignDetails')
 const schedule = require('./src/schedule/schedule'); 
