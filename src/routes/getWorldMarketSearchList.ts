@@ -1,11 +1,12 @@
-const express = require('express');
+import express, { Request, Response } from 'express';
+import MarketApi from '../api/marketApi';
+
 const router = express.Router();
-const MarketApi = require('../api/marketApi');
 
 // Add middleware to parse JSON-encoded bodies
 router.use(express.json());
 
-router.post('/getWorldMarketSearchList', async (req, res) => {
+router.post('/getWorldMarketSearchList', async (req: Request, res: Response) => {
   try {
     const { searchResult } = req.body;
     const result = await MarketApi.getWorldMarketSearchList(searchResult);
@@ -16,4 +17,4 @@ router.post('/getWorldMarketSearchList', async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

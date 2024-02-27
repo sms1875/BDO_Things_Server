@@ -1,15 +1,15 @@
-const axios = require('axios');
+import axios, { AxiosResponse } from 'axios';
 
-const baseUrl = 'https://trade.kr.playblackdesert.com';
+const baseUrl: string = 'https://trade.kr.playblackdesert.com';
 
-const headers = {
+const headers: Record<string, string> = {
   'Content-Type': 'application/json',
   'User-Agent': 'BlackDesert'
 };
 
-const fetchData = async (url, body) => {
+const fetchData = async (url: string, body: any): Promise<any> => {
   try {
-    const response = await axios.post(baseUrl + url, body, { headers });
+    const response: AxiosResponse = await axios.post(baseUrl + url, body, { headers });
     return response.data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -19,7 +19,6 @@ const fetchData = async (url, body) => {
 
 /**
  * MarketApi: API for accessing Black Desert Online market data.
- * @exports MarketApi
  * @see https://developers.veliainn.com/
  */
 const MarketApi = {
@@ -39,7 +38,7 @@ const MarketApi = {
    * 10 - Last sale price
    * 11 - Last sale time
    */
-  getWorldMarketHotList: async () => fetchData('/Trademarket/GetWorldMarketHotList', {}),
+  getWorldMarketHotList: async (): Promise<any> => fetchData('/Trademarket/GetWorldMarketHotList', {}),
 
   /**
    * Get items from a specific category or subcategory.
@@ -52,8 +51,8 @@ const MarketApi = {
    * 2 - Total trades
    * 3 - Base price
    */
-  getWorldMarketList: async (keyType, mainCategory, subCategory) => {
-    const requestBody = { keyType, mainCategory };
+   getWorldMarketList: async (keyType: number, mainCategory: number, subCategory?: number): Promise<any> => {
+    const requestBody: any = { keyType, mainCategory };
     if (subCategory !== undefined) requestBody.subCategory = subCategory;
     return fetchData('/Trademarket/GetWorldMarketList', requestBody);
   },
@@ -74,7 +73,9 @@ const MarketApi = {
    * 8 - Last sale price
    * 9 - Last sale time
    */
-  getWorldMarketSubList: async (keyType, mainKey) => fetchData('/Trademarket/GetWorldMarketSubList', { keyType, mainKey }),
+  getWorldMarketSubList: async (keyType: number, mainKey: number): Promise<any> =>
+  fetchData('/Trademarket/GetWorldMarketSubList', { keyType, mainKey }),
+
 
   /**
    * Search items by their ids.
@@ -86,7 +87,8 @@ const MarketApi = {
    * 2 - Base price
    * 3 - Total trades
    */
-  getWorldMarketSearchList: async (searchResult) => fetchData('/Trademarket/GetWorldMarketSearchList', { searchResult }),
+  getWorldMarketSearchList: async (searchResult: string): Promise<any> =>
+  fetchData('/Trademarket/GetWorldMarketSearchList', { searchResult }),
 
   /**
    * Get orders for a specific item.
@@ -98,7 +100,8 @@ const MarketApi = {
    * 1 - Amount of sell orders
    * 2 - Amount of buy orders
    */
-  getBiddingInfoList: async (keyType, mainKey, subKey) => fetchData('/Trademarket/GetBiddingInfoList', { keyType, mainKey, subKey }),
+  getBiddingInfoList: async (keyType: number, mainKey: number, subKey: number): Promise<any> =>
+  fetchData('/Trademarket/GetBiddingInfoList', { keyType, mainKey, subKey }),
 
   /**
    * Get the price history of an item for the past 90 days.
@@ -108,7 +111,8 @@ const MarketApi = {
    * @returns {Promise<Array>} - Response Data Structure
    * The prices are sorted by date, in ascending order. First value would be the price for 90 days ago, while the last value would be the price for today.
    */
-  getMarketPriceInfo: async (keyType, mainKey, subKey) => fetchData('/Trademarket/GetMarketPriceInfo', { keyType, mainKey, subKey }),
+  getMarketPriceInfo: async (keyType: number, mainKey: number, subKey: number): Promise<any> =>
+  fetchData('/Trademarket/GetMarketPriceInfo', { keyType, mainKey, subKey }),
 
   /**
    * Get list of items in queue for registration.
@@ -118,7 +122,7 @@ const MarketApi = {
    * 2 - Price
    * 3 - Timestamp when item hits the market
    */
-  getWorldMarketWaitList: async () => fetchData('/Trademarket/GetWorldMarketWaitList', {})
+  getWorldMarketWaitList: async (): Promise<any> => fetchData('/Trademarket/GetWorldMarketWaitList', {})
 };
 
-module.exports = MarketApi;
+export default MarketApi;

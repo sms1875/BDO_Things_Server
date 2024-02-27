@@ -1,29 +1,30 @@
-const express = require('express');
+import express, { Request, Response } from 'express';
+import { connPoolPromise } from '../../db/dbConnect';
+
 const router = express.Router();
-const { connPool, sql } = require('../../db/dbConnect');
 
 /**
- * 거래소 대기 상품 목록을 가져와 응답합니다.
+ * 가공 무역 레시피 정보를 가져와 응답합니다.
  * 
  * @description
- * - 가공 무역 레시피 정보를 가져옵니다
+ * - 데이터베이스에서 가공 무역 레시피 정보를 조회하여 응답합니다.
  */
-router.post('/getDesignDetails', async (req, res) => {
+router.post('/getDesignDetails', async (req: Request, res: Response) => {
   try {
-    const query = await connPool;
+    const query = await connPoolPromise;
     const result = await query.request().execute('[bdo_thinsg].[dbo].[GetDesignDetails]');
 
     res.status(200).json(processDesignDetails(result.recordset));
   } catch (error) {
-    console.error('Error getting world market search list:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error('가공 무역 레시피 정보를 가져오는 중 에러 발생:', error);
+    res.status(500).json({ error: '내부 서버 오류' });
   }
 });
 
 // 디자인 ID 기준으로 재료 정리
-const processDesignDetails = (designDetails) => {
+const processDesignDetails = (designDetails: any[]) => {
   // Object to store processed design details
-  const processedDesigns = {};
+  const processedDesigns: { [key: string]: any } = {};
 
   // Loop through each design detail
   designDetails.forEach(detail => {
@@ -59,7 +60,7 @@ const processDesignDetails = (designDetails) => {
   // Convert processed designs object into an array of design details
   const processedDesignsArray = Object.values(processedDesigns);
 
-   return processedDesignsArray;
+  return processedDesignsArray;
 };
 
-module.exports = router;
+export default router;
