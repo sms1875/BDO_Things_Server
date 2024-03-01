@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model Item {
+  id                  Int       @id @unique
+  sub_id              Int
+  name                String
+  description         String?
+  icon_image          String
+  grade_type          Int
+  weight              Float
+  buy_price           Int
+  sell_price          Int
+  repair_price        Int
+  has_market_data     Boolean
+  expiration_period   Int
+  tooltip             String?
+  item_is_product_of_design Design[] @relation("products")
+  item_is_used_in_design Design[]  @relation("ingredients")
+}
+
+model Design {
+  id               Int      @id @unique
+  name             String
+  icon_image       String
+  crafting_time    Int
+  ingredients      Item[] @relation("ingredients")
+  products         Item[] @relation("products")
+  db_type          String
+}

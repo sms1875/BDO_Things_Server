@@ -11,7 +11,7 @@ import MarketApi from '../api/marketApi';
 const updateMaterialsMarketPrice = async (): Promise<void> => {
   try {
     const query = await connPoolPromise;
-    const request = await query.request().execute('[bdo_thinsg].[dbo].[GetMaterialIds]');
+    const request = await query.request().execute('[bdo_things].[dbo].[GetMaterialIds]');
     const materialIds: number[] = request.recordset.map((row: any) => row['MaterialId']);
 
     // 각 재료에 대해 Market API를 사용하여 검색을 수행하고 결과를 처리합니다.
@@ -48,7 +48,7 @@ const updateMaterialMarketPrice = async (materialId: number, marketPrice: number
     const request = await query.request()
       .input('MaterialID', mssql.Int, materialId)
       .input('MarketPrice', mssql.Int, marketPrice)
-      .execute('[bdo_thinsg].[dbo].[UpdateMaterialMarketPrice]');
+      .execute('[bdo_things].[dbo].[UpdateMaterialMarketPrice]');
   } catch (error) {
     console.error('재료 ID', materialId, '에 대한 시장 가격 업데이트 중 에러 발생:', error);
   }

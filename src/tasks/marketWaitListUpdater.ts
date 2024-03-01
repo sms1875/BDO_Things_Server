@@ -19,7 +19,7 @@ const updateMarketWaitList = async (): Promise<void> => {
       const items = marketWaitList.resultMsg.split('|');
 
       // 기존 데이터를 삭제합니다.
-      await query.request().execute('[bdo_thinsg].[dbo].[ClearMarketWaitListData]');
+      await query.request().execute('[bdo_things].[dbo].[ClearMarketWaitListData]');
 
       // 각 항목을 데이터베이스에 삽입합니다.
       for (const item of items) {
@@ -36,7 +36,7 @@ const updateMarketWaitList = async (): Promise<void> => {
             .input('enhancementLevel', mssql.Int, enhancementLevel)
             .input('price', mssql.BigInt, price)
             .input('datetime', mssql.DateTime, datetime)
-            .execute('[bdo_thinsg].[dbo].[AddMarketWaitListData]');
+            .execute('[bdo_things].[dbo].[AddMarketWaitListData]');
         }
       }
 

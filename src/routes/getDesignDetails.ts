@@ -12,7 +12,7 @@ const router = express.Router();
 router.post('/getDesignDetails', async (req: Request, res: Response) => {
   try {
     const query = await connPoolPromise;
-    const result = await query.request().execute('[bdo_thinsg].[dbo].[GetDesignDetails]');
+    const result = await query.request().execute('[bdo_things].[dbo].[GetDesignDetails]');
 
     res.status(200).json(processDesignDetails(result.recordset));
   } catch (error) {
