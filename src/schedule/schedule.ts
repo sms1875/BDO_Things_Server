@@ -6,12 +6,12 @@ import updateMaterialsMarketPrice from '../tasks/materialsMarketPriceUpdater';
 const start = (): void => {
   // 1분마다 거래 대기 목록 업데이트 작업을 수행합니다.
   schedule.scheduleJob('*/1 * * * *', async () => {
-    await updateMarketWaitList();
+    // await updateMarketWaitList();
   });
 
   // 1분마다 재료 시세 업데이트 작업을 수행합니다.
   schedule.scheduleJob('*/1 * * * *', async () => {
-    await updateMaterialsMarketPrice();
+    // await updateMaterialsMarketPrice();
   });
 
   // 5분마다 임시 작업을 수행합니다.

@@ -2,53 +2,27 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-interface DbConfig {
-  server: string;
-  port: number;
-  pool: {
-    max: number;
-    min: number;
-    idleTimeoutMillis: number;
-  };
-  options: {
-    encrypt: boolean;
-    database: string;
-    trustServerCertificate: boolean;
-  };
-  authentication: {
-    type: string;
-    options: {
-      userName: string;
-      password: string;
-    };
-  };
-}
-
 const config: {
   port: string | undefined;
-  dbconfig: DbConfig;
+  firebaseConfig: {
+    apiKey: string;
+    authDomain: string;
+    projectId: string;
+    storageBucket: string;
+    messagingSenderId: string;
+    appId: string;
+    measurementId?: string;
+  };
 } = {
   port: process.env.PORT,
-  dbconfig: {
-    server: process.env.DB_DEV_SERVER || 'DB_DEV_SERVER',
-    port: parseInt(process.env.DB_DEV_PORT || 'DB_DEV_PORT'),
-    pool: {
-      max: 5,
-      min: 1,
-      idleTimeoutMillis: 30000,
-    },
-    options: {
-      encrypt: true,
-      database: process.env.DB_DEV_DATABASE || 'DB_DEV_DATABASE',
-      trustServerCertificate: true,
-    },
-    authentication: {
-      type: 'default',
-      options: {
-        userName: process.env.DB_DEV_USERNAME || 'DB_DEV_USERNAME',
-        password: process.env.DB_DEV_PASSWORD || 'DB_DEV_PASSWORD',
-      },
-    },
+  firebaseConfig: {
+    apiKey: process.env.FIREBASE_API_KEY || 'YOUR_API_KEY',
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN || 'YOUR_AUTH_DOMAIN',
+    projectId: process.env.FIREBASE_PROJECT_ID || 'YOUR_PROJECT_ID',
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET || 'YOUR_STORAGE_BUCKET',
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID || 'YOUR_MESSAGING_SENDER_ID',
+    appId: process.env.FIREBASE_APP_ID || 'YOUR_APP_ID',
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID || 'YOUR_MEASUREMENT_ID',
   },
 };
 

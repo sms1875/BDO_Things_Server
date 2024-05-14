@@ -1,13 +1,20 @@
 import express, { Application, Request, Response } from 'express';
-import marketWaitListRouter from './src/routes/getMarketWaitList'; 
+import marketWaitListRouter from './src/routes/getMarketWaitList';
 import getWorldMarketSearchList from './src/routes/getWorldMarketSearchList';
 import getDesignDetails from './src/routes/getDesignDetails';
-import { start as startSchedule } from './src/schedule/schedule'; 
+import { start as startSchedule } from './src/schedule/schedule';
+import { initializeFirebase } from './src/firebase/firebase';
+import {addCrateData} from './src/firebase/addCrateData';
+
+// Initialize Firebase
+initializeFirebase();
 
 // 스케줄러를 시작합니다.
 startSchedule();
 
 const app: Application = express();
+
+addCrateData();
 
 // Use marketWaitList router for '/marketWaitList' route
 app.use('/', marketWaitListRouter);

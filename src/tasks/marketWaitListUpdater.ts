@@ -1,4 +1,3 @@
-import { mssql, connPoolPromise } from '../../db/dbConnect';
 import MarketApi from '../api/marketApi';
 
 /**
@@ -10,6 +9,7 @@ import MarketApi from '../api/marketApi';
  */
 const updateMarketWaitList = async (): Promise<void> => {
   try {
+    /*
     // 거래소 API를 통해 대기 중인 상품 목록을 가져옵니다.
     const marketWaitList = await MarketApi.getWorldMarketWaitList();
     const query = await connPoolPromise;
@@ -19,7 +19,7 @@ const updateMarketWaitList = async (): Promise<void> => {
       const items = marketWaitList.resultMsg.split('|');
 
       // 기존 데이터를 삭제합니다.
-      await query.request().execute('[bdo_thinsg].[dbo].[ClearMarketWaitListData]');
+      await query.request().execute('[bdo_things].[dbo].[ClearMarketWaitListData]');
 
       // 각 항목을 데이터베이스에 삽입합니다.
       for (const item of items) {
@@ -36,14 +36,14 @@ const updateMarketWaitList = async (): Promise<void> => {
             .input('enhancementLevel', mssql.Int, enhancementLevel)
             .input('price', mssql.BigInt, price)
             .input('datetime', mssql.DateTime, datetime)
-            .execute('[bdo_thinsg].[dbo].[AddMarketWaitListData]');
+            .execute('[bdo_things].[dbo].[AddMarketWaitListData]');
         }
       }
 
       console.log('거래소 대기 상품 목록이 데이터베이스에 삽입되었습니다.');
     } else {
       console.error('거래소 대기 상품 목록을 가져오는 중 에러 발생');
-    }
+    }*/
   } catch (error) {
     console.error('거래소 대기 상품 목록 업데이트 중 에러 발생:', error);
   }

@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { connPoolPromise } from '../../db/dbConnect';
 
 const router = express.Router();
 
@@ -11,10 +10,10 @@ const router = express.Router();
  */
 router.post('/getDesignDetails', async (req: Request, res: Response) => {
   try {
-    const query = await connPoolPromise;
-    const result = await query.request().execute('[bdo_thinsg].[dbo].[GetDesignDetails]');
+    //const query = await connPoolPromise;
+    //const result = await query.request().execute('[bdo_things].[dbo].[GetDesignDetails]');
 
-    res.status(200).json(processDesignDetails(result.recordset));
+    //res.status(200).json(processDesignDetails(result.recordset));
   } catch (error) {
     console.error('가공 무역 레시피 정보를 가져오는 중 에러 발생:', error);
     res.status(500).json({ error: '내부 서버 오류' });
