@@ -56,6 +56,7 @@ export async function addCrateData(): Promise<void> {
   const filter = (designData: DesignDTO | undefined) => designData?.name?.includes('Crate') ?? false;
 
   // 가공 상자 시작 아이템 id = 9200, 마지막 아이템 id = 9602
+  console.log('Adding crate data to Firestore...');
   for (let id = 9200; id <= 9602; id++) {
     const designData = await fetchData(BDOLYTICS_API_URLS.DESIGN, String(id));
     if (designData && filter(designData as DesignDTO)) {
@@ -69,4 +70,5 @@ export async function addCrateData(): Promise<void> {
       ]);
     }
   }
+  console.log('Crate data added to Firestore.');
 }

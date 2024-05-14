@@ -1,5 +1,5 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { Firestore, getFirestore, doc, setDoc } from 'firebase/firestore';
+import { Firestore, getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 import config from '../../config/config';
 
 // Firebase Initialization
@@ -16,8 +16,14 @@ export function initializeFirebase(): void {
 export async function addDocument(collectionName: string, data: any, id: string): Promise<void> {
   try {
     const docRef = doc(db, collectionName, id);
-    await setDoc(docRef, data);
-    console.log(`Document written with ID ${id} in collection ${collectionName}`);
+    const docSnapshot = await getDoc(docRef);
+
+    if (!docSnapshot.exists()) {
+      await setDoc(docRef, data);
+      console.log(`Document written with ID ${id} in collection ${collectionName}`);
+    } else {
+      console.log(`Document with ID ${id} already exists in collection ${collectionName}`);
+    }
   } catch (error) {
     console.error(`Error adding document to collection ${collectionName}: `, error);
   }
