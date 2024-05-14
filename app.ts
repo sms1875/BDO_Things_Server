@@ -4,7 +4,6 @@ import getWorldMarketSearchList from './src/routes/getWorldMarketSearchList';
 import getDesignDetails from './src/routes/getDesignDetails';
 import { start as startSchedule } from './src/schedule/schedule';
 import { initializeFirebase } from './src/firebase/firebase';
-import {addCrateData} from './src/firebase/addCrateData';
 
 // Initialize Firebase
 initializeFirebase();
@@ -13,8 +12,6 @@ initializeFirebase();
 startSchedule();
 
 const app: Application = express();
-
-addCrateData();
 
 // Use marketWaitList router for '/marketWaitList' route
 app.use('/', marketWaitListRouter);
