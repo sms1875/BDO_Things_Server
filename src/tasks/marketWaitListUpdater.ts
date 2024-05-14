@@ -1,4 +1,3 @@
-import { mssql, connPoolPromise } from '../../db/dbConnect';
 import MarketApi from '../api/marketApi';
 
 /**
@@ -10,6 +9,7 @@ import MarketApi from '../api/marketApi';
  */
 const updateMarketWaitList = async (): Promise<void> => {
   try {
+    /*
     // 거래소 API를 통해 대기 중인 상품 목록을 가져옵니다.
     const marketWaitList = await MarketApi.getWorldMarketWaitList();
     const query = await connPoolPromise;
@@ -43,7 +43,7 @@ const updateMarketWaitList = async (): Promise<void> => {
       console.log('거래소 대기 상품 목록이 데이터베이스에 삽입되었습니다.');
     } else {
       console.error('거래소 대기 상품 목록을 가져오는 중 에러 발생');
-    }
+    }*/
   } catch (error) {
     console.error('거래소 대기 상품 목록 업데이트 중 에러 발생:', error);
   }

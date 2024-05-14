@@ -1,4 +1,3 @@
-import { connPoolPromise, mssql } from '../../db/dbConnect';
 import MarketApi from '../api/marketApi';
 
 /**
@@ -10,6 +9,7 @@ import MarketApi from '../api/marketApi';
  */
 const updateMaterialsMarketPrice = async (): Promise<void> => {
   try {
+    /*
     const query = await connPoolPromise;
     const request = await query.request().execute('[bdo_things].[dbo].[GetMaterialIds]');
     const materialIds: number[] = request.recordset.map((row: any) => row['MaterialId']);
@@ -30,7 +30,7 @@ const updateMaterialsMarketPrice = async (): Promise<void> => {
         console.error('재료 ID', materialId, '에 대한 시장 데이터를 가져오지 못했습니다');
       }
     }
-
+*/
     console.log('가공 무역 재료 거래소 가격이 업데이트되었습니다.');
   } catch (error) {
     console.error('재료 ID를 가져오는 중 에러 발생:', error);
@@ -44,11 +44,13 @@ const updateMaterialsMarketPrice = async (): Promise<void> => {
  */
 const updateMaterialMarketPrice = async (materialId: number, marketPrice: number): Promise<void> => {
   try {
+    /*
     const query = await connPoolPromise;
     const request = await query.request()
       .input('MaterialID', mssql.Int, materialId)
       .input('MarketPrice', mssql.Int, marketPrice)
       .execute('[bdo_things].[dbo].[UpdateMaterialMarketPrice]');
+      */
   } catch (error) {
     console.error('재료 ID', materialId, '에 대한 시장 가격 업데이트 중 에러 발생:', error);
   }

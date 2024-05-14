@@ -3,18 +3,18 @@ import marketWaitListRouter from './src/routes/getMarketWaitList';
 import getWorldMarketSearchList from './src/routes/getWorldMarketSearchList';
 import getDesignDetails from './src/routes/getDesignDetails';
 import { start as startSchedule } from './src/schedule/schedule';
-import { PrismaClient } from '@prisma/client'; // Import PrismaClient
-import { initDB } from './db/fetchData';
+import { initializeFirebase } from './src/firebase/firebase';
+import {addCrateData} from './src/firebase/addCrateData';
 
-initDB();
-
-// Initialize PrismaClient
-const prisma = new PrismaClient();
+// Initialize Firebase
+initializeFirebase();
 
 // 스케줄러를 시작합니다.
 startSchedule();
 
 const app: Application = express();
+
+addCrateData();
 
 // Use marketWaitList router for '/marketWaitList' route
 app.use('/', marketWaitListRouter);
@@ -34,19 +34,3 @@ app.get('/main', function (req: Request, res: Response) {
 app.listen(3000, function () {
   console.log('Express server started on port 3000');
 });
-
-
-async function main() {
-  console.log("main");
-}
-
-
-main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
-  .catch(async (e) => {
-    console.error(e)
-    await prisma.$disconnect()
-    process.exit(1)
-  })
