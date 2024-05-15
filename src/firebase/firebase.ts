@@ -70,6 +70,25 @@ const firebase = {
   },
 
   /**
+ * Firestore 컬렉션에서 여러 문서를 가져옵니다.
+ * @param {string} collectionName - 컬렉션 이름
+ * @returns {Promise<any[]>} - 문서 데이터 배열
+ */
+  getDocuments: async function (collectionName: string): Promise<any[]> {
+    try {
+      const querySnapshot = await getDocs(collection(this.db!, collectionName));
+      const documents: any[] = [];
+      querySnapshot.forEach((doc) => {
+        documents.push(doc.data());
+      });
+      return documents;
+    } catch (error) {
+      console.error(`Error getting documents from collection ${collectionName}: `, error);
+      return [];
+    }
+  },
+
+  /**
    * Firestore 컬렉션의 문서를 업데이트합니다.
    * @param {string} collectionName - 컬렉션 이름
    * @param {string} id - 문서 ID
