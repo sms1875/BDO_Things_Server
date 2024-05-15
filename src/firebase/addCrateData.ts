@@ -1,6 +1,6 @@
 import firebase from './firebase';
 import BdolyticsApi from '../api/bdolyticsApi';
-import { DesignDTO, ItemDTO } from '../DTO/BDOlyticsDTO';
+import { DesignDTO, ItemDTO } from '../DTO/bdolyticsDTO';
 import { BDOLYTICS_API_URLS } from '../constants';
 
 /**

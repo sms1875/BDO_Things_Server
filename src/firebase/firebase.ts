@@ -1,5 +1,5 @@
 import { initializeApp, FirebaseApp } from 'firebase/app';
-import { Firestore, getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
+import { Firestore, getFirestore, doc, getDoc, setDoc, collection, getDocs, query, where, updateDoc, deleteDoc } from 'firebase/firestore';
 import config from '../../config/config';
 
 const firebase = {
@@ -44,6 +44,59 @@ const firebase = {
       console.log(`Document written with ID ${id} in collection ${collectionName}`); // 성공 메시지를 출력합니다.
     } catch (error) {
       console.error(`Error adding document to collection ${collectionName}: `, error);
+    }
+  },
+
+  /**
+   * Firestore 컬렉션에서 문서를 가져옵니다.
+   * @param {string} collectionName - 컬렉션 이름
+   * @param {string} id - 문서 ID
+   * @returns {Promise<any>} - 문서 데이터
+   */
+  getDocument: async function (collectionName: string, id: string): Promise<any> {
+    try {
+      const docRef = doc(this.db!, collectionName, id); // 문서 참조를 가져옵니다.
+      const docSnapshot = await getDoc(docRef); // 문서 스냅샷을 가져옵니다.
+      if (docSnapshot.exists()) {
+        return docSnapshot.data(); // 문서 데이터를 반환합니다.
+      } else {
+        console.log(`No document found with ID ${id} in collection ${collectionName}`);
+        return null;
+      }
+    } catch (error) {
+      console.error(`Error getting document from collection ${collectionName}: `, error);
+      return null;
+    }
+  },
+
+  /**
+   * Firestore 컬렉션의 문서를 업데이트합니다.
+   * @param {string} collectionName - 컬렉션 이름
+   * @param {string} id - 문서 ID
+   * @param {any} data - 업데이트할 데이터
+   */
+  updateDocument: async function (collectionName: string, id: string, data: any): Promise<void> {
+    try {
+      const docRef = doc(this.db!, collectionName, id); // 문서 참조를 가져옵니다.
+      await updateDoc(docRef, data); // 문서를 업데이트합니다.
+      console.log(`Document updated with ID ${id} in collection ${collectionName}`);
+    } catch (error) {
+      console.error(`Error updating document in collection ${collectionName}: `, error);
+    }
+  },
+
+  /**
+   * Firestore 컬렉션에서 문서를 삭제합니다.
+   * @param {string} collectionName - 컬렉션 이름
+   * @param {string} id - 문서 ID
+   */
+  deleteDocument: async function (collectionName: string, id: string): Promise<void> {
+    try {
+      const docRef = doc(this.db!, collectionName, id); // 문서 참조를 가져옵니다.
+      await deleteDoc(docRef); // 문서를 삭제합니다.
+      console.log(`Document deleted with ID ${id} from collection ${collectionName}`);
+    } catch (error) {
+      console.error(`Error deleting document from collection ${collectionName}: `, error);
     }
   },
 };

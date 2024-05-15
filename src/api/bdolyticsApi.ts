@@ -1,4 +1,4 @@
-import { DesignDTO, ItemDTO } from '../DTO/BDOlyticsDTO';
+import { DesignDTO, ItemDTO } from '../DTO/bdolyticsDTO';
 import axios from 'axios';
 
 /**
