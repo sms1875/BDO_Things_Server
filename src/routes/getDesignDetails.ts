@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import firebase from '../firebase/firebase';
 import { DesignDTO } from '../DTO/bdolyticsDTO';
+import { FIREBASE_COLLECTIONS } from '../constants';
 
 const router = express.Router();
 
@@ -16,7 +17,7 @@ const router = express.Router();
  */
 router.get('/getDesignDetails', async (req: Request, res: Response) => {
   try {
-    let documents: DesignDTO[] = await firebase.getDocuments('crateDesign');
+    let documents: DesignDTO[] = await firebase.getDocuments(FIREBASE_COLLECTIONS.CRATE_DESIGN);
 
     // 각 문서에 필터를 적용합니다.
     documents = documents.map(filterDesignData);

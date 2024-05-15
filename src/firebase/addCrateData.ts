@@ -1,7 +1,7 @@
 import firebase from './firebase';
 import BdolyticsApi from '../api/bdolyticsApi';
 import { DesignDTO, ItemDTO } from '../DTO/bdolyticsDTO';
-import { BDOLYTICS_API_URLS } from '../constants';
+import { BDOLYTICS_API_URLS, FIREBASE_COLLECTIONS } from '../constants';
 
 /**
  * 가공무역 상자 정보를 Firestore에 추가합니다.
@@ -22,9 +22,9 @@ async function addCrateData(): Promise<void> {
       const ingredientIds: string[] = (designData as DesignDTO).ingredients.map(ingredient => String(ingredient.id));
 
       await Promise.all([
-        addDataToDocument(BDOLYTICS_API_URLS.DESIGN, String(id), 'crateDesign'),
-        ...productIds.map(productId => addDataToDocument(BDOLYTICS_API_URLS.ITEM, productId, 'crateProduct')),
-        ...ingredientIds.map(ingredientId => addCrateIngredientData(BDOLYTICS_API_URLS.ITEM, ingredientId, 'crateIngredient'))
+        addDataToDocument(BDOLYTICS_API_URLS.DESIGN, String(id), FIREBASE_COLLECTIONS.CRATE_DESIGN),
+        ...productIds.map(productId => addDataToDocument(BDOLYTICS_API_URLS.ITEM, productId, FIREBASE_COLLECTIONS.CRATE_PRODUCT)),
+        ...ingredientIds.map(ingredientId => addCrateIngredientData(BDOLYTICS_API_URLS.ITEM, ingredientId, FIREBASE_COLLECTIONS.CRATE_INGREDIENT))
       ]);
     }
   }
@@ -39,7 +39,7 @@ async function addCrateData(): Promise<void> {
  */
 async function addDataToDocument(url: string, id: string, documentType: string): Promise<void> {
   const itemData = await BdolyticsApi.fetchBdolyticsCategoryIdData(url, id);
-  if (itemData && Object.keys(itemData).length > 0) {    
+  if (itemData && Object.keys(itemData).length > 0) {
     const documentExists = await firebase.documentExists(documentType, id);
     if (!documentExists) {
       await firebase.addDocument(documentType, itemData, id);
@@ -60,9 +60,9 @@ async function addDataToDocument(url: string, id: string, documentType: string):
 async function addCrateIngredientData(url: string, id: string, documentType: string): Promise<void> {
   const itemData = await BdolyticsApi.fetchBdolyticsCategoryIdData(url, id);
   if (itemData && Object.keys(itemData).length > 0) {
-    const filteredItemData: ItemDTO = filterItemData(itemData as ItemDTO);
     const documentExists = await firebase.documentExists(documentType, id);
     if (!documentExists) {
+      const filteredItemData: ItemDTO = filterItemData(itemData as ItemDTO);
       await firebase.addDocument(documentType, filteredItemData, id);
     } else {
       console.log(`ID ${id}에 대한 데이터가 이미 존재합니다. 문서 유형: ${documentType}`);
