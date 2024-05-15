@@ -1,4 +1,6 @@
 import express, { Request, Response } from 'express';
+import firebase from '../firebase/firebase';
+import { DesignDTO } from '../DTO/bdolyticsDTO';
 
 const router = express.Router();
 
@@ -7,59 +9,42 @@ const router = express.Router();
  * 
  * @description
  * - 데이터베이스에서 가공 무역 레시피 정보를 조회하여 응답합니다.
+ * - GET 요청을 통해 데이터를 가져옵니다.
+ * 
+ * @param {Request} req - 요청 객체
+ * @param {Response} res - 응답 객체
  */
-router.post('/getDesignDetails', async (req: Request, res: Response) => {
+router.get('/getDesignDetails', async (req: Request, res: Response) => {
   try {
-    //const query = await connPoolPromise;
-    //const result = await query.request().execute('[bdo_things].[dbo].[GetDesignDetails]');
+    let documents: DesignDTO[] = await firebase.getDocuments('crateDesign');
 
-    //res.status(200).json(processDesignDetails(result.recordset));
+    // 각 문서에 필터를 적용합니다.
+    documents = documents.map(filterDesignData);
+
+    // 응답합니다.
+    res.status(200).json(documents);
   } catch (error) {
     console.error('가공 무역 레시피 정보를 가져오는 중 에러 발생:', error);
-    res.status(500).json({ error: '내부 서버 오류' });
+    res.status(500).json({ error: '가공 무역 레시피 정보를 가져오는 중 에러 발생' });
   }
 });
 
-// 디자인 ID 기준으로 재료 정리
-const processDesignDetails = (designDetails: any[]) => {
-  // Object to store processed design details
-  const processedDesigns: { [key: string]: any } = {};
-
-  // Loop through each design detail
-  designDetails.forEach(detail => {
-    const { 'Design ID': designId, 'Product ID': productId, 'Product Sell Price': productSellPrice, 'Product Name': productName, 'Product Quantity': productQuantity, 'Material ID': materialId, 'Material Quantity': materialQuantity, 'Market Price': marketPrice, 'Material Name': materialName } = detail;
-
-    // Check if design ID already exists in processed designs
-    if (processedDesigns[designId]) {
-      // If design ID exists, push material details to existing design's materials array
-      processedDesigns[designId].materials.push({
-        'Material ID': materialId,
-        'Material Quantity': materialQuantity,
-        'Market Price': marketPrice,
-        'Material Name': materialName
-      });
-    } else {
-      // If design ID doesn't exist, create a new design object with material details
-      processedDesigns[designId] = {
-        'Design ID': designId,
-        'Product ID': productId,
-        'Product Sell Price': productSellPrice,
-        'Product Name': productName,
-        'Product Quantity': productQuantity,
-        materials: [{
-          'Material ID': materialId,
-          'Material Quantity': materialQuantity,
-          'Market Price': marketPrice,
-          'Material Name': materialName
-        }]
-      };
-    }
-  });
-
-  // Convert processed designs object into an array of design details
-  const processedDesignsArray = Object.values(processedDesigns);
-
-  return processedDesignsArray;
-};
+/**
+ * 디자인 데이터 필터링 함수
+ * @param {DesignDTO} designData - 필터링할 디자인 데이터
+ * @returns {DesignDTO} - 필터링된 디자인 데이터
+ */
+function filterDesignData(designData: DesignDTO): DesignDTO {
+  return {
+    id: designData.id,
+    name: designData.name,
+    icon_image: designData.icon_image,
+    // crafting_time: designData.crafting_time,
+    ingredients: designData.ingredients,
+    products: designData.products,
+    // crafted_in_houses: designData.crafted_in_houses,
+    db_type: designData.db_type,
+  };
+}
 
 export default router;
