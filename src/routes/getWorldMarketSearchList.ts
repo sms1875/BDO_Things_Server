@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import MarketApi from '../api/marketApi';
+import { MARKET_API_URLS } from '../constants';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ router.use(express.json());
 router.post('/getWorldMarketSearchList', async (req: Request, res: Response) => {
   try {
     const { searchResult } = req.body;
-    const result = await MarketApi.getWorldMarketSearchList(searchResult);
+    const result = await MarketApi.getWorldMarketSearchList(MARKET_API_URLS.KR, searchResult);
     res.status(200).json(result);
   } catch (error) {
     console.error('Error getting world market search list:', error);

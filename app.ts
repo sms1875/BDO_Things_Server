@@ -3,10 +3,10 @@ import marketWaitListRouter from './src/routes/getMarketWaitList';
 import getWorldMarketSearchList from './src/routes/getWorldMarketSearchList';
 import getDesignDetails from './src/routes/getDesignDetails';
 import { start as startSchedule } from './src/schedule/schedule';
-import { initializeFirebase } from './src/firebase/firebase';
+import firebase from './src/firebase/firebase';
 
 // Initialize Firebase
-initializeFirebase();
+firebase.initializeFirebase();
 
 // 스케줄러를 시작합니다.
 startSchedule();
