@@ -9,6 +9,7 @@ export const MARKET_API_URLS = {
 };
 
 export const FIREBASE_COLLECTIONS = {
+  MARKET_WAIT_LIST: 'marketWaitList',
   CRATE_DESIGN: 'crateDesign',
   CRATE_PRODUCT: 'crateProduct',
   CRATE_INGREDIENT: 'crateIngredient',

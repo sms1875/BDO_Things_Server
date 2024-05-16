@@ -53,33 +53,33 @@ const firebase = {
    * @param {string} id - 문서 ID
    * @returns {Promise<any>} - 문서 데이터
    */
-  getDocument: async function (collectionName: string, id: string): Promise<any> {
+  getDocument: async function <T>(collectionName: string, id: string): Promise<T> {
     try {
       const docRef = doc(this.db!, collectionName, id); // 문서 참조를 가져옵니다.
       const docSnapshot = await getDoc(docRef); // 문서 스냅샷을 가져옵니다.
       if (docSnapshot.exists()) {
-        return docSnapshot.data(); // 문서 데이터를 반환합니다.
+        return docSnapshot.data() as T; // 문서 데이터를 반환합니다.
       } else {
         console.log(`No document found with ID ${id} in collection ${collectionName}`);
-        return null;
+        return null as unknown as T;
       }
     } catch (error) {
       console.error(`Error getting document from collection ${collectionName}: `, error);
-      return null;
+      throw error;
     }
   },
 
   /**
  * Firestore 컬렉션에서 여러 문서를 가져옵니다.
  * @param {string} collectionName - 컬렉션 이름
- * @returns {Promise<any[]>} - 문서 데이터 배열
+ * @returns {Promise<T[]>} - 문서 데이터 배열
  */
-  getDocuments: async function (collectionName: string): Promise<any[]> {
+  getDocuments: async function <T>(collectionName: string): Promise<T[]> {
     try {
       const querySnapshot = await getDocs(collection(this.db!, collectionName));
-      const documents: any[] = [];
+      const documents: T[] = [];
       querySnapshot.forEach((doc) => {
-        documents.push(doc.data());
+        documents.push(doc.data() as T);
       });
       return documents;
     } catch (error) {
@@ -91,10 +91,10 @@ const firebase = {
   /**
    * Firestore 컬렉션의 문서를 업데이트합니다.
    * @param {string} collectionName - 컬렉션 이름
-   * @param {string} id - 문서 ID
    * @param {any} data - 업데이트할 데이터
+   * @param {string} id - 문서 ID
    */
-  updateDocument: async function (collectionName: string, id: string, data: any): Promise<void> {
+  updateDocument: async function (collectionName: string, data: any, id: string ): Promise<void> {
     try {
       const docRef = doc(this.db!, collectionName, id); // 문서 참조를 가져옵니다.
       await updateDoc(docRef, data); // 문서를 업데이트합니다.
