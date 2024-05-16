@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { MarketApiResponseDTO, HotItemDTO, MarketItemDTO, MarketSubItemDTO, SearchedItemDTO, BiddingInfoDTO, MarketPriceInfoDTO, WaitListItemDTO } from '../DTO/marketDTO';
 
 /**
  * MarketApi: API for accessing Black Desert Online market data.
@@ -17,18 +18,18 @@ const MarketApi = {
    * Fetches data from the market API.
    * @param {string} url - The URL of the API endpoint.
    * @param {any} body - The request body.
-   * @returns {Promise<any>} - The response data.
+   * @returns {Promise<MarketApiResponseDTO>} - The response data.
    */
-  fetchData: async (url: string, body: any): Promise<any> => {
+  fetchData: async (url: string, body: any): Promise<MarketApiResponseDTO> => {
     try {
       const response: AxiosResponse = await axios.post(url, body, { headers: MarketApi.headers });
       return response.data;
     } catch (error) {
       console.error('Error fetching data:', error);
-      return null;
+      return { resultCode: -1, resultMsg: 'Error fetching data' }; // 에러 발생 시 기본값 반환
     }
   },
-  
+
   /**
    * Get all hot items from the marketplace.
    * @param {string} marketUrl - The base URL of the market API. (e.g., KR, EU)
@@ -104,10 +105,56 @@ const MarketApi = {
   /**
    * Get list of items in queue for registration.
    * @param {string} marketUrl - The base URL of the market API. (e.g., KR, EU)
-   * @returns {Promise<Array>} - Response Data Structure
+   * @returns {Promise<Array<WaitListItemDTO>>} - Response Data Structure
    * [Item ID, Enhancement Level, Price, Timestamp when item hits the market]
    */
-  getWorldMarketWaitList: async (marketUrl: string): Promise<any> => MarketApi.fetchData(`${marketUrl}GetWorldMarketWaitList`, {})
+  getWorldMarketWaitList: async (marketUrl: string): Promise<Array<WaitListItemDTO>> => {
+    const responseData = await MarketApi.fetchData(`${marketUrl}GetWorldMarketWaitList`, {});
+    return MarketApi.parseDataArray<WaitListItemDTO>(responseData, itemString => {
+      const itemData = itemString.split('-');
+      return {
+        itemId: parseInt(itemData[0]),
+        enhancementLevel: parseInt(itemData[1]),
+        price: parseInt(itemData[2]),
+        timestamp: parseInt(itemData[3])
+      };
+    });
+  },
+
+  /**
+  * Parses the response data to an array of T using the provided parsing function.
+  * @param {MarketApiResponseDTO} responseData - The raw response data.
+  * @param {(itemString: string) => T} parseFunction - The function to parse each item string.
+  * @returns {Array<T>} - Parsed array of type T.
+  */
+  parseDataArray: <T>(responseData: MarketApiResponseDTO, parseFunction: (itemString: string) => T): Array<T> => {
+    const parsedItems: Array<T> = [];
+    if (responseData.resultCode === 0) {
+      const itemStringArray = responseData.resultMsg.split('|');
+      itemStringArray.forEach((itemString: string) => {
+        parsedItems.push(parseFunction(itemString));
+      });
+    }
+    return parsedItems;
+  },
+
+  /**
+   * Parses the response data to an array of T using the provided parsing function.
+   * @param {MarketApiResponseDTO} responseData - The raw response data.
+   * @param {(itemData: string[]) => T} parseFunction - The function to parse each item data array.
+   * @returns {Array<T>} - Parsed array of type T.
+   */
+  parseDataArrayWithData: <T>(responseData: MarketApiResponseDTO, parseFunction: (itemData: string[]) => T): Array<T> => {
+    const parsedItems: Array<T> = [];
+    if (responseData.resultCode === 0) {
+      const itemStringArray = responseData.resultMsg.split('|');
+      itemStringArray.forEach((itemString: string) => {
+        const itemData = itemString.split('-');
+        parsedItems.push(parseFunction(itemData));
+      });
+    }
+    return parsedItems;
+  },
 };
 
 export default MarketApi;
