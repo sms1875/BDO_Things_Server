@@ -2,6 +2,7 @@ import firebaseService from '../firebase/firebaseService';
 import MarketApi from '../api/marketApi';
 import { FIREBASE_COLLECTIONS, MARKET_API_URLS } from '../constants';
 import { ItemDTO } from '../DTO/bdolyticsDTO';
+import { IngrediantsMarketPriceDTO } from '../DTO/firebaseDTO';
 
 // 캐시된 원자재 데이터
 let cachedIngredients: ItemDTO[] = [];
@@ -26,7 +27,7 @@ const initCachedIngredients = async (): Promise<void> => {
  * - 캐시된 원자재 데이터를 활용하여 불필요한 네트워크 요청을 줄입니다.
  * - 일괄 작업을 활용하여 성능을 개선하고 Firebase 비용을 절감합니다.
  */
-const materialsMarketPriceUpdater = async (): Promise<void> => {
+const ingrediantsMarketPriceUpdater = async (): Promise<void> => {
   try {
     if (!isInitiated) await initCachedIngredients();
 
@@ -37,8 +38,8 @@ const materialsMarketPriceUpdater = async (): Promise<void> => {
     const batch = firebaseService.createBatch();
 
     for (const item of searchResult) {
-      const marketPriceDTO: ItemMarketPriceDTO = { itemId: item.itemId, marketPrice: item.basePrice };
-      const itemRef = firebaseService.doc(FIREBASE_COLLECTIONS.ITME_MARKETPRICE, item.itemId.toString());
+      const marketPriceDTO: IngrediantsMarketPriceDTO = { itemId: item.itemId, marketPrice: item.basePrice };
+      const itemRef = firebaseService.doc(FIREBASE_COLLECTIONS.INGREDIANTS_MARKETPRICE, item.itemId.toString());
       batch.set(itemRef, marketPriceDTO);
     }
 
@@ -51,9 +52,4 @@ const materialsMarketPriceUpdater = async (): Promise<void> => {
   }
 };
 
-interface ItemMarketPriceDTO {
-  itemId: number;
-  marketPrice: number;
-}
-
-export default materialsMarketPriceUpdater;
+export default ingrediantsMarketPriceUpdater;

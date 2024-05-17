@@ -2,6 +2,7 @@ import express, { Application, Request, Response } from 'express';
 import marketWaitListRouter from './src/routes/getMarketWaitList';
 import getWorldMarketSearchList from './src/routes/getWorldMarketSearchList';
 import getDesignDetails from './src/routes/getDesignDetails';
+import getingrediantsMarketPrice from './src/routes/getingrediantsMarketPrice';
 import { start as startSchedule } from './src/schedule/schedule';
 
 // 스케줄러를 시작합니다.
@@ -13,6 +14,7 @@ const app: Application = express();
 app.use('/', marketWaitListRouter);
 app.use('/', getWorldMarketSearchList);
 app.use('/', getDesignDetails);
+app.use('/', getingrediantsMarketPrice)
 
 app.use(express.static(__dirname));
 
