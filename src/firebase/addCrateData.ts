@@ -1,4 +1,4 @@
-import firebase from './firebase';
+import firebaseService from './firebaseService';
 import BdolyticsApi from '../api/bdolyticsApi';
 import { DesignDTO, ItemDTO } from '../DTO/bdolyticsDTO';
 import { BDOLYTICS_API_URLS, FIREBASE_COLLECTIONS } from '../constants';
@@ -40,9 +40,9 @@ async function addCrateData(): Promise<void> {
 async function addDataToDocument(url: string, id: string, documentType: string): Promise<void> {
   const itemData = await BdolyticsApi.fetchBdolyticsCategoryIdData(url, id);
   if (itemData && Object.keys(itemData).length > 0) {
-    const documentExists = await firebase.documentExists(documentType, id);
+    const documentExists = await firebaseService.documentExists(documentType, id);
     if (!documentExists) {
-      await firebase.addDocument(documentType, itemData, id);
+      await firebaseService.addDocument(documentType, itemData, id);
     } else {
       console.log(`ID ${id}에 대한 데이터가 이미 존재합니다. 문서 유형: ${documentType}`);
     }
@@ -60,10 +60,10 @@ async function addDataToDocument(url: string, id: string, documentType: string):
 async function addCrateIngredientData(url: string, id: string, documentType: string): Promise<void> {
   const itemData = await BdolyticsApi.fetchBdolyticsCategoryIdData(url, id);
   if (itemData && Object.keys(itemData).length > 0) {
-    const documentExists = await firebase.documentExists(documentType, id);
+    const documentExists = await firebaseService.documentExists(documentType, id);
     if (!documentExists) {
       const filteredItemData: ItemDTO = filterItemData(itemData as ItemDTO);
-      await firebase.addDocument(documentType, filteredItemData, id);
+      await firebaseService.addDocument(documentType, filteredItemData, id);
     } else {
       console.log(`ID ${id}에 대한 데이터가 이미 존재합니다. 문서 유형: ${documentType}`);
     }

@@ -4,9 +4,18 @@ import { MARKET_API_URLS } from '../constants';
 
 const router = express.Router();
 
-// Add middleware to parse JSON-encoded bodies
 router.use(express.json());
 
+/**
+ * 아이템 검색 결과를 가져와 응답합니다.
+ * 
+ * @description
+ * - 마켓에서 검색 결과를 조회하여 응답합니다.
+ * 
+ * @param {Request} req - 요청 객체 
+ * body : { "searchResult": "4901,10286" }
+ * @param {Response} res - 응답 객체
+ */
 router.post('/getWorldMarketSearchList', async (req: Request, res: Response) => {
   try {
     const { searchResult } = req.body;
