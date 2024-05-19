@@ -2,10 +2,10 @@ export interface DesignDTO {
   id: number;
   name: string;
   icon_image: string;
-  crafting_time: number;
+  crafting_time?: number;
   ingredients: IngredientDTO[];
   products: IngredientDTO[];
-  crafted_in_houses: CraftedInHouseDTO[];
+  crafted_in_houses?: CraftedInHouseDTO[];
   db_type: string;
 }
 
