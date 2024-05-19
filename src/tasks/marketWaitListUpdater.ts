@@ -18,6 +18,24 @@ const initCachedWaitListData = async (): Promise<void> => {
 };
 
 /**
+ * 변경된 항목을 가져옵니다.
+ *
+ * @param {WaitListItemDTO[]} marketWaitList - 거래소 대기 상품 목록
+ * @param {WaitListItemDTO[]} existingDocuments - 기존 문서 데이터
+ * @returns {{ updatedItems: WaitListItemDTO[], deletedItems: WaitListItemDTO[] }} 변경된 항목
+ */
+const getChangedItems = (
+  marketWaitList: WaitListItemDTO[],
+  existingDocuments: WaitListItemDTO[]
+): { updatedItems: WaitListItemDTO[]; deletedItems: WaitListItemDTO[] } => {
+  // 추가된 항목을 필터링합니다.
+  const updatedItems = marketWaitList.filter((item) => !existingDocuments.some((doc) => doc.timestamp === item.timestamp));
+  // 삭제된 항목을 필터링합니다.
+  const deletedItems = existingDocuments.filter((doc) => !marketWaitList.some((item) => item.timestamp === doc.timestamp));
+  return { updatedItems, deletedItems };
+};
+
+/**
  * 거래소 대기 상품 목록을 업데이트합니다.
  *
  * @description
@@ -25,7 +43,8 @@ const initCachedWaitListData = async (): Promise<void> => {
  * - 기존 데이터와 비교하여 변경된 항목만 추가/업데이트/삭제합니다.
  * - 일괄 작업을 활용하여 성능을 개선하고 Firebase 비용을 절감합니다.
  */
-const updateMarketWaitList = async (): Promise<void> => {
+const marketWaitListUpdater = async (): Promise<void> => {
+  if (!isInitiated) await initCachedWaitListData();
   try {
     // 거래소 API를 통해 대기 중인 상품 목록을 가져옵니다.
     const marketWaitList = await MarketApi.getWorldMarketWaitList(MARKET_API_URLS.KR);
@@ -59,32 +78,6 @@ const updateMarketWaitList = async (): Promise<void> => {
   } catch (error) {
     console.error('거래소 대기 상품 목록 업데이트 중 에러가 발생했습니다:', error);
   }
-};
-
-/**
- * 변경된 항목을 가져옵니다.
- *
- * @param {WaitListItemDTO[]} marketWaitList - 거래소 대기 상품 목록
- * @param {WaitListItemDTO[]} existingDocuments - 기존 문서 데이터
- * @returns {{ updatedItems: WaitListItemDTO[], deletedItems: WaitListItemDTO[] }} 변경된 항목
- */
-const getChangedItems = (
-  marketWaitList: WaitListItemDTO[],
-  existingDocuments: WaitListItemDTO[]
-): { updatedItems: WaitListItemDTO[]; deletedItems: WaitListItemDTO[] } => {
-  // 추가된 항목을 필터링합니다.
-  const updatedItems = marketWaitList.filter((item) => !existingDocuments.some((doc) => doc.timestamp === item.timestamp));
-  // 삭제된 항목을 필터링합니다.
-  const deletedItems = existingDocuments.filter((doc) => !marketWaitList.some((item) => item.timestamp === doc.timestamp));
-  return { updatedItems, deletedItems };
-};
-
-/**
- * 거래소 대기 상품 목록 업데이터를 실행합니다.
- */
-const marketWaitListUpdater = async (): Promise<void> => {
-  if (!isInitiated) await initCachedWaitListData();
-  await updateMarketWaitList();
 };
 
 export default marketWaitListUpdater;
