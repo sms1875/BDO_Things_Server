@@ -2,6 +2,7 @@ import firebaseService from "../services/firebaseService";
 import MarketApi from "../services/marketApiService";
 import { MARKET_API_URLS, FIREBASE_COLLECTIONS } from "../constants";
 import { WaitListItemDTO } from "../types/marketDTO";
+import logger from "../config/logger";
 
 // 캐시된 대기 상품 목록 데이터
 let cachedWaitListData: WaitListItemDTO[] = [];
@@ -16,7 +17,7 @@ const initCachedWaitListData = async (): Promise<void> => {
         FIREBASE_COLLECTIONS.MARKET_WAIT_LIST
     );
     isInitiated = true; // 초기화 후 플래그를 true로 설정합니다.
-    console.log("캐시된 대기 상품 목록 데이터가 초기화되었습니다.");
+    logger.info("캐시된 대기 상품 목록 데이터가 초기화되었습니다.");
 };
 
 /**
@@ -59,7 +60,7 @@ const updateMarketWaitList = async (): Promise<void> => {
             MARKET_API_URLS.KR
         );
         if (!marketWaitList) {
-            console.error("거래소 대기 상품 목록을 가져오는 중 에러 발생");
+            logger.error("거래소 대기 상품 목록을 가져오는 중 에러 발생");
             return;
         }
 
@@ -93,9 +94,9 @@ const updateMarketWaitList = async (): Promise<void> => {
 
         // 캐시된 대기 상품 목록 데이터를 업데이트합니다.
         cachedWaitListData = marketWaitList;
-        console.log("거래소 대기 상품 목록 업데이트가 완료되었습니다.");
+        logger.info("거래소 대기 상품 목록 업데이트가 완료되었습니다.");
     } catch (error) {
-        console.error(
+        logger.error(
             "거래소 대기 상품 목록 업데이트 중 에러가 발생했습니다:",
             error
         );

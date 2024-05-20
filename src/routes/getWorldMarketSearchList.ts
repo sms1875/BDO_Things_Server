@@ -1,6 +1,7 @@
 import express, { Request, Response } from "express";
 import MarketApi from "../services/marketApiService";
 import { MARKET_API_URLS } from "../constants";
+import logger from "../config/logger";
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.post(
             );
             res.status(200).json(result);
         } catch (error) {
-            console.error("Error getting world market search list:", error);
+            logger.error("Error getting world market search list:", error);
             res.status(500).json({ error: "Internal server error" });
         }
     }

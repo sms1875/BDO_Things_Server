@@ -2,6 +2,7 @@ import firebaseService from "../services/firebaseService";
 import BdolyticsApi from "../services/bdolyticsApiService";
 import { DesignDTO, ItemDTO } from "../types/bdolyticsDTO";
 import { BDOLYTICS_API_URLS, FIREBASE_COLLECTIONS } from "../constants";
+import logger from "../config/logger";
 
 /**
  * 가공무역 상자 정보를 Firestore에 추가합니다.
@@ -15,7 +16,7 @@ async function addCrateData(): Promise<void> {
         const filter = (designData: DesignDTO | undefined) =>
             designData?.name?.includes("Crate") ?? false;
 
-        console.log("add crate data in Firestore...");
+        logger.info("Firestore에 가공무역 상자 데이터를 추가하는 중...");
         for (let id = 9200; id <= 9602; id++) {
             const designData = await BdolyticsApi.fetchBdolyticsCategoryIdData(
                 BDOLYTICS_API_URLS.DESIGN,
@@ -54,9 +55,12 @@ async function addCrateData(): Promise<void> {
                 await Promise.all(promises);
             }
         }
-        console.log("Crate data update completed.");
+        logger.info("가공무역 상자 데이터 추가가 완료되었습니다.");
     } catch (error) {
-        console.error("Error updating crate data:", error);
+        logger.error(
+            "가공무역 상자 데이터를 업데이트하는 중 에러 발생:",
+            error
+        );
     }
 }
 
@@ -84,17 +88,17 @@ async function addDataToDocument(
             if (!documentExists) {
                 await firebaseService.addDocument(documentType, itemData, id);
             } else {
-                console.log(
-                    `Data for ID ${id} already exists. Document type: ${documentType}`
+                logger.info(
+                    `ID ${id}에 해당하는 데이터가 이미 존재합니다. 문서 유형: ${documentType}`
                 );
             }
         } else {
-            console.log(
-                `Data for ID ${id} not found. Document type: ${documentType}`
+            logger.info(
+                `ID ${id}에 해당하는 데이터를 찾을 수 없습니다. 문서 유형: ${documentType}`
             );
         }
     } catch (error) {
-        console.error(`Error adding data to document for ID ${id}:`, error);
+        logger.error(`ID ${id}에 데이터를 추가하는 중 에러 발생:`, error);
     }
 }
 
@@ -129,18 +133,18 @@ async function addCrateIngredientData(
                     id
                 );
             } else {
-                console.log(
-                    `Data for ID ${id} already exists. Document type: ${documentType}`
+                logger.info(
+                    `ID ${id}에 해당하는 데이터가 이미 존재합니다. 문서 유형: ${documentType}`
                 );
             }
         } else {
-            console.log(
-                `Data for ID ${id} not found. Document type: ${documentType}`
+            logger.info(
+                `ID ${id}에 해당하는 데이터를 찾을 수 없습니다. 문서 유형: ${documentType}`
             );
         }
     } catch (error) {
-        console.error(
-            `Error adding crate ingredient data for ID ${id}:`,
+        logger.error(
+            `ID ${id}에 가공무역 상자 재료 데이터를 추가하는 중 에러 발생:`,
             error
         );
     }

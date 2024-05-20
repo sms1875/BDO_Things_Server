@@ -16,7 +16,7 @@ import {
     DocumentReference,
     DocumentData
 } from "firebase/firestore";
-import config from "../config";
+import config from "../config/config";
 
 interface IFirebaseService {
     documentExists(collectionName: string, id: string): Promise<boolean>;

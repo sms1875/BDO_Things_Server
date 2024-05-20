@@ -3,6 +3,7 @@ import MarketApi from "../services/marketApiService";
 import { FIREBASE_COLLECTIONS, MARKET_API_URLS } from "../constants";
 import { ItemDTO } from "../types/bdolyticsDTO";
 import { IngrediantsMarketPriceDTO } from "../types/firebaseDTO";
+import logger from "../config/logger";
 
 // 캐시된 원자재 데이터
 let cachedIngredients: ItemDTO[] = [];
@@ -17,7 +18,7 @@ const initCachedIngredients = async (): Promise<void> => {
         FIREBASE_COLLECTIONS.CRATE_INGREDIENT
     );
     isInitiated = true;
-    console.log("캐시된 원자재 데이터가 초기화되었습니다.");
+    logger.info("캐시된 원자재 데이터가 초기화되었습니다.");
 };
 
 /**
@@ -59,9 +60,9 @@ const updateIngrediantsMarketPrice = async (): Promise<void> => {
         // 일괄 작업을 커밋합니다.
         await firebaseService.commitBatch(batch);
 
-        console.log("원자재의 시장 가격이 업데이트되었습니다.");
+        logger.info("원자재의 시장 가격이 업데이트되었습니다.");
     } catch (error) {
-        console.error("원자재 ID 가져오기 중 에러가 발생했습니다:", error);
+        logger.error("원자재 ID 가져오기 중 에러가 발생했습니다:", error);
     }
 };
 
