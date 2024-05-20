@@ -1,20 +1,41 @@
 import express, { Application } from "express";
 import routes from "./routes/index";
-import { scheduleJobs } from "./schedule/scheduleJobs";
 import logger from "./config/logger";
 import config from "./config/config";
 import morganMiddleware from "./config/morganMiddleware";
-import addDesignInfo from "./tasks/addDesignInfo";
+import { scheduleJobs } from "./schedule/scheduleJobs";
 
-const app: Application = express();
+class App {
+    private app: Application;
 
-app.use("/", routes);
-app.use(express.static(__dirname));
-app.use(morganMiddleware);
+    constructor() {
+        this.app = express();
+        this.configureMiddlewares();
+        this.configureRoutes();
+        this.startServer();
+        this.scheduleJobs();
+    }
 
-app.listen(config.port, function () {
-    logger.info(` NODE ENV = ${process.env.NODE_ENV} `);
-    logger.info(`Server is running on port : ${config.port}`);
-});
+    private configureMiddlewares() {
+        this.app.use(express.static(__dirname));
+        this.app.use(morganMiddleware);
+    }
 
-scheduleJobs();
+    private configureRoutes() {
+        this.app.use("/", routes);
+    }
+
+    private startServer() {
+        const port = config.port;
+        this.app.listen(port, () => {
+            logger.info(`NODE ENV = ${process.env.NODE_ENV}`);
+            logger.info(`Server is running on port : ${port}`);
+        });
+    }
+
+    private scheduleJobs() {
+        scheduleJobs();
+    }
+}
+
+new App();

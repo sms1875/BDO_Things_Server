@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import firebaseService from "../services/firebaseService";
 import { IngrediantsMarketPriceDTO } from "../types/firebaseDTO";
 import { FIREBASE_COLLECTIONS } from "../constants";
+import logger from "../config/logger";
 
 const router = express.Router();
 
@@ -27,7 +28,7 @@ router.get(
             // 응답합니다.
             res.status(200).json(documents);
         } catch (error) {
-            console.error(
+            logger.error(
                 "가공 무역 레시피 정보를 가져오는 중 에러 발생:",
                 error
             );

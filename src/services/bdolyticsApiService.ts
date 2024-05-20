@@ -1,3 +1,4 @@
+import logger from "../config/logger";
 import { DesignDTO, ItemDTO } from "../types/bdolyticsDTO";
 import axios from "axios";
 
@@ -21,7 +22,7 @@ class BdolyticsApiService implements IBdolyticsApiService {
             const response = await axios.get(`${url}${id}`);
             return response.data.data as ItemDTO | DesignDTO;
         } catch (error) {
-            console.error(`Error fetching data from ${url}:`, error);
+            logger.error(`Error fetching data from ${url}:`, error);
             return null;
         }
     }

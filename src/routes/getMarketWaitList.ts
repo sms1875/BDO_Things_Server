@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import firebaseService from "../services/firebaseService";
 import { WaitListItemDTO } from "../types/marketDTO";
 import { FIREBASE_COLLECTIONS } from "../constants";
+import logger from "../config/logger";
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ router.get("/getMarketWaitList", async (req: Request, res: Response) => {
         // 응답합니다.
         res.status(200).json(documents);
     } catch (error) {
-        console.error("거래소 대기 상품 목록을 가져오는 중 에러 발생:", error);
+        logger.error("거래소 대기 상품 목록을 가져오는 중 에러 발생:", error);
         res.status(500).json({
             error: "거래소 대기 상품 목록을 가져오는 중 에러 발생"
         });
