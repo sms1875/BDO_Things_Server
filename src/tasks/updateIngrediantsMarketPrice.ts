@@ -29,7 +29,7 @@ const initCachedIngredients = async (): Promise<void> => {
  * - 캐시된 원자재 데이터를 활용하여 불필요한 네트워크 요청을 줄입니다.
  * - 일괄 작업을 활용하여 성능을 개선하고 Firebase 비용을 절감합니다.
  */
-const ingrediantsMarketPriceUpdater = async (): Promise<void> => {
+const updateIngrediantsMarketPrice = async (): Promise<void> => {
     try {
         if (!isInitiated) await initCachedIngredients();
 
@@ -65,4 +65,4 @@ const ingrediantsMarketPriceUpdater = async (): Promise<void> => {
     }
 };
 
-export default ingrediantsMarketPriceUpdater;
+export default updateIngrediantsMarketPrice;

@@ -1,8 +1,8 @@
 import express, { Application } from "express";
 import routes from "./routes/index";
-import { start as startSchedule } from "./schedule/schedule";
+import { scheduleJobs } from "./schedule/scheduleJobs";
 
-startSchedule();
+scheduleJobs();
 
 const app: Application = express();
 

@@ -1,18 +1,16 @@
 import schedule from "node-schedule";
-import marketWaitListUpdater from "../tasks/marketWaitListUpdater";
-import ingrediantsMarketPriceUpdater from "../tasks/ingrediantsMarketPriceUpdater";
+import updateMarketWaitList from "../tasks/updateMarketWaitList";
+import updateIngrediantsMarketPrice from "../tasks/updateIngrediantsMarketPrice";
 
 // 스케줄러 시작 함수
-const start = (): void => {
+export const scheduleJobs = () => {
     // 1분마다 거래 대기 목록 업데이트 작업을 수행합니다.
     schedule.scheduleJob("*/10 * * * *", async () => {
-        await ingrediantsMarketPriceUpdater();
+        await updateIngrediantsMarketPrice();
     });
 
     // 10분마다 재료 시세 업데이트 작업을 수행합니다.
     schedule.scheduleJob("*/1 * * * *", async () => {
-        await marketWaitListUpdater();
+        await updateMarketWaitList();
     });
 };
-
-export { start };

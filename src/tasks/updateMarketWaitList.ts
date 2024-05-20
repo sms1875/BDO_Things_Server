@@ -51,7 +51,7 @@ const getChangedItems = (
  * - 기존 데이터와 비교하여 변경된 항목만 추가/업데이트/삭제합니다.
  * - 일괄 작업을 활용하여 성능을 개선하고 Firebase 비용을 절감합니다.
  */
-const marketWaitListUpdater = async (): Promise<void> => {
+const updateMarketWaitList = async (): Promise<void> => {
     if (!isInitiated) await initCachedWaitListData();
     try {
         // 거래소 API를 통해 대기 중인 상품 목록을 가져옵니다.
@@ -102,4 +102,4 @@ const marketWaitListUpdater = async (): Promise<void> => {
     }
 };
 
-export default marketWaitListUpdater;
+export default updateMarketWaitList;
