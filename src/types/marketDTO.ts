@@ -1,9 +1,9 @@
-interface MarketApiResponseDTO {
+export interface MarketApiResponseDTO {
     resultCode: number;
     resultMsg: string;
 }
 
-interface HotItemDTO {
+export interface HotItemDTO {
     itemId: number;
     enhancementMin: number;
     enhancementMax: number;
@@ -18,14 +18,14 @@ interface HotItemDTO {
     lastSaleTime: number;
 }
 
-interface MarketItemDTO {
+export interface MarketItemDTO {
     itemId: number;
     currentStock: number;
     totalTrades: number;
     basePrice: number;
 }
 
-interface MarketSubItemDTO {
+export interface MarketSubItemDTO {
     itemId: number;
     enhancementMin: number;
     enhancementMax: number;
@@ -38,37 +38,26 @@ interface MarketSubItemDTO {
     lastSaleTime: number;
 }
 
-interface SearchedItemDTO {
+export interface SearchedItemDTO {
     itemId: number;
     currentStock: number;
     basePrice: number;
     totalTrades: number;
 }
 
-interface BiddingInfoDTO {
+export interface BiddingInfoDTO {
     price: number;
     sellOrders: number;
     buyOrders: number;
 }
 
-interface MarketPriceInfoDTO {
+export interface MarketPriceInfoDTO {
     priceHistory: number[]; // Prices sorted by date, ascending order
 }
 
-interface WaitListItemDTO {
+export interface WaitListItemDTO {
     itemId: number;
     enhancementLevel: number;
     price: number;
     timestamp: number;
 }
-
-export {
-    MarketApiResponseDTO,
-    HotItemDTO,
-    MarketItemDTO,
-    MarketSubItemDTO,
-    SearchedItemDTO,
-    BiddingInfoDTO,
-    MarketPriceInfoDTO,
-    WaitListItemDTO
-};

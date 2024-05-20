@@ -16,9 +16,37 @@ import {
     DocumentReference,
     DocumentData
 } from "firebase/firestore";
-import config from "../../config/config";
+import config from "../config";
 
-class FirebaseService {
+interface IFirebaseService {
+    documentExists(collectionName: string, id: string): Promise<boolean>;
+    addDocument<T extends DocumentData>(
+        collectionName: string,
+        data: T,
+        id: string
+    ): Promise<void>;
+    getDocument<T extends DocumentData>(
+        collectionName: string,
+        id: string
+    ): Promise<T | null>;
+    updateDocument<T extends DocumentData>(
+        collectionName: string,
+        data: T,
+        id: string
+    ): Promise<void>;
+    deleteDocument(collectionName: string, id: string): Promise<void>;
+    getDocuments<T extends DocumentData>(collectionName: string): Promise<T[]>;
+    getDocumentsWhere<T extends DocumentData>(
+        collectionName: string,
+        fieldName: string,
+        fieldValue: unknown
+    ): Promise<T[]>;
+    createBatch(): WriteBatch;
+    commitBatch(batch: WriteBatch): Promise<void>;
+    doc(collectionName: string, id: string): DocumentReference;
+}
+
+class FirebaseService implements IFirebaseService {
     private app!: FirebaseApp;
     private db!: Firestore;
 

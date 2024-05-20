@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import firebaseService from "../firebase/firebaseService";
-import { WaitListItemDTO } from "../DTO/marketDTO";
+import firebaseService from "../services/firebaseService";
+import { WaitListItemDTO } from "../types/marketDTO";
 import { FIREBASE_COLLECTIONS } from "../constants";
 
 const router = express.Router();

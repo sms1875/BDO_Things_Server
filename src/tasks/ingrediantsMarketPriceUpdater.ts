@@ -1,8 +1,8 @@
-import firebaseService from "../firebase/firebaseService";
-import MarketApi from "../api/marketApi";
+import firebaseService from "../services/firebaseService";
+import MarketApi from "../services/marketApiService";
 import { FIREBASE_COLLECTIONS, MARKET_API_URLS } from "../constants";
-import { ItemDTO } from "../DTO/bdolyticsDTO";
-import { IngrediantsMarketPriceDTO } from "../DTO/firebaseDTO";
+import { ItemDTO } from "../types/bdolyticsDTO";
+import { IngrediantsMarketPriceDTO } from "../types/firebaseDTO";
 
 // 캐시된 원자재 데이터
 let cachedIngredients: ItemDTO[] = [];

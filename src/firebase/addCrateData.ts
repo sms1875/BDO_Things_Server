@@ -1,6 +1,6 @@
-import firebaseService from "./firebaseService";
-import BdolyticsApi from "../api/bdolyticsApi";
-import { DesignDTO, ItemDTO } from "../DTO/bdolyticsDTO";
+import firebaseService from "../services/firebaseService";
+import BdolyticsApi from "../services/bdolyticsApi";
+import { DesignDTO, ItemDTO } from "../types/bdolyticsDTO";
 import { BDOLYTICS_API_URLS, FIREBASE_COLLECTIONS } from "../constants";
 
 /**

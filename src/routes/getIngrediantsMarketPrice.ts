@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
-import firebaseService from "../firebase/firebaseService";
-import { IngrediantsMarketPriceDTO } from "../DTO/firebaseDTO";
+import firebaseService from "../services/firebaseService";
+import { IngrediantsMarketPriceDTO } from "../types/firebaseDTO";
 import { FIREBASE_COLLECTIONS } from "../constants";
 
 const router = express.Router();

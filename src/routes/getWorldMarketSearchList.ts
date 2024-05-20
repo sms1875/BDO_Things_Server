@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import MarketApi from "../api/marketApi";
+import MarketApi from "../services/marketApiService";
 import { MARKET_API_URLS } from "../constants";
 
 const router = express.Router();

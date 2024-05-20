@@ -1,7 +1,7 @@
-import firebaseService from "../firebase/firebaseService";
-import MarketApi from "../api/marketApi";
+import firebaseService from "../services/firebaseService";
+import MarketApi from "../services/marketApiService";
 import { MARKET_API_URLS, FIREBASE_COLLECTIONS } from "../constants";
-import { WaitListItemDTO } from "../DTO/marketDTO";
+import { WaitListItemDTO } from "../types/marketDTO";
 
 // 캐시된 대기 상품 목록 데이터
 let cachedWaitListData: WaitListItemDTO[] = [];

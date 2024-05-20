@@ -8,9 +8,9 @@ import {
     BiddingInfoDTO,
     MarketPriceInfoDTO,
     WaitListItemDTO
-} from "../DTO/marketDTO";
+} from "../types/marketDTO";
 
-interface IMarketApi {
+interface IMarketApiService {
     getWorldMarketHotList(marketUrl: string): Promise<HotItemDTO[]>;
     getWorldMarketList(
         marketUrl: string,
@@ -46,7 +46,7 @@ interface IMarketApi {
  * MarketApi: API for accessing Black Desert Online market data.
  * @see https://developers.veliainn.com/
  */
-class MarketApi implements IMarketApi {
+class MarketApiService implements IMarketApiService {
     private static readonly headers = {
         "Content-Type": "application/json",
         "User-Agent": "BlackDesert"
@@ -58,7 +58,7 @@ class MarketApi implements IMarketApi {
     ): Promise<MarketApiResponseDTO> {
         try {
             const response: AxiosResponse = await axios.post(url, body, {
-                headers: MarketApi.headers
+                headers: MarketApiService.headers
             });
             return response.data;
         } catch (error) {
@@ -206,11 +206,14 @@ class MarketApi implements IMarketApi {
      * Last sale price, Last sale time]
      */
     async getWorldMarketHotList(marketUrl: string): Promise<HotItemDTO[]> {
-        const responseData = await MarketApi.fetchData(
+        const responseData = await MarketApiService.fetchData(
             `${marketUrl}GetWorldMarketHotList`,
             {}
         );
-        return MarketApi.parseDataArray(responseData, MarketApi.parseHotItem);
+        return MarketApiService.parseDataArray(
+            responseData,
+            MarketApiService.parseHotItem
+        );
     }
 
     /**
@@ -230,13 +233,13 @@ class MarketApi implements IMarketApi {
     ): Promise<MarketItemDTO[]> {
         const requestBody: any = { keyType, mainCategory };
         if (subCategory !== undefined) requestBody.subCategory = subCategory;
-        const responseData = await MarketApi.fetchData(
+        const responseData = await MarketApiService.fetchData(
             `${marketUrl}GetWorldMarketList`,
             requestBody
         );
-        return MarketApi.parseDataArray(
+        return MarketApiService.parseDataArray(
             responseData,
-            MarketApi.parseMarketItem
+            MarketApiService.parseMarketItem
         );
     }
 
@@ -254,13 +257,13 @@ class MarketApi implements IMarketApi {
         keyType: number,
         mainKey: number
     ): Promise<MarketSubItemDTO[]> {
-        const responseData = await MarketApi.fetchData(
+        const responseData = await MarketApiService.fetchData(
             `${marketUrl}GetWorldMarketSubList`,
             { keyType, mainKey }
         );
-        return MarketApi.parseDataArray(
+        return MarketApiService.parseDataArray(
             responseData,
-            MarketApi.parseMarketSubItem
+            MarketApiService.parseMarketSubItem
         );
     }
 
@@ -275,13 +278,13 @@ class MarketApi implements IMarketApi {
         marketUrl: string,
         searchResult: string
     ): Promise<SearchedItemDTO[]> {
-        const responseData = await MarketApi.fetchData(
+        const responseData = await MarketApiService.fetchData(
             `${marketUrl}GetWorldMarketSearchList`,
             { searchResult }
         );
-        return MarketApi.parseDataArray(
+        return MarketApiService.parseDataArray(
             responseData,
-            MarketApi.parseSearchedItem
+            MarketApiService.parseSearchedItem
         );
     }
 
@@ -300,13 +303,13 @@ class MarketApi implements IMarketApi {
         mainKey: number,
         subKey: number
     ): Promise<BiddingInfoDTO[]> {
-        const responseData = await MarketApi.fetchData(
+        const responseData = await MarketApiService.fetchData(
             `${marketUrl}GetBiddingInfoList`,
             { keyType, mainKey, subKey }
         );
-        return MarketApi.parseDataArray(
+        return MarketApiService.parseDataArray(
             responseData,
-            MarketApi.parseBiddingInfo
+            MarketApiService.parseBiddingInfo
         );
     }
 
@@ -326,7 +329,7 @@ class MarketApi implements IMarketApi {
         mainKey: number,
         subKey: number
     ): Promise<MarketPriceInfoDTO> {
-        const responseData = await MarketApi.fetchData(
+        const responseData = await MarketApiService.fetchData(
             `${marketUrl}GetMarketPriceInfo`,
             { keyType, mainKey, subKey }
         );
@@ -349,16 +352,16 @@ class MarketApi implements IMarketApi {
     async getWorldMarketWaitList(
         marketUrl: string
     ): Promise<WaitListItemDTO[]> {
-        const responseData = await MarketApi.fetchData(
+        const responseData = await MarketApiService.fetchData(
             `${marketUrl}GetWorldMarketWaitList`,
             {}
         );
-        return MarketApi.parseDataArray(
+        return MarketApiService.parseDataArray(
             responseData,
-            MarketApi.parseWaitListItem
+            MarketApiService.parseWaitListItem
         );
     }
 }
 
-const marketapi = new MarketApi();
-export default marketapi;
+const marketApiService = new MarketApiService();
+export default marketApiService;
