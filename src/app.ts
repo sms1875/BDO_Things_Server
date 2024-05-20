@@ -4,6 +4,7 @@ import { scheduleJobs } from "./schedule/scheduleJobs";
 import logger from "./config/logger";
 import config from "./config/config";
 import morganMiddleware from "./config/morganMiddleware";
+import addDesignInfo from "./tasks/addDesignInfo";
 
 const app: Application = express();
 

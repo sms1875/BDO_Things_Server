@@ -13,6 +13,9 @@ export const FIREBASE_COLLECTIONS = {
     CRATE_DESIGN: "crateDesign",
     CRATE_PRODUCT: "crateProduct",
     CRATE_INGREDIENT: "crateIngredient",
+    MOUNT_DESIGN: "mountDesign",
+    MOUNT_PRODUCT: "mountProduct",
+    MOUNT_INGREDIENT: "mountIngredient",
     INGREDIANTS_MARKETPRICE: "ingrediantsMarketPrice",
     DESIGN: "design",
     ITEM: "item"

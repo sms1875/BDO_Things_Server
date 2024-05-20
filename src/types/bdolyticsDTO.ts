@@ -45,6 +45,7 @@ export interface ItemDTO {
     expiration_period?: number;
     tooltip?: string[];
     item_obtained_from_box?: IngredientDTO[];
+    item_summons_mount?: ItemSummonsMount[];
     item_obtained_from_quests?: ItemObtainedFromQuest[];
     item_is_used_in_design?: DesignDTO[];
     item_is_product_of_design?: DesignDTO[];
@@ -53,6 +54,7 @@ export interface ItemDTO {
     item_is_used_in_processing_recipes?: ItemIsRecipe[];
     item_obtained_from_farmables?: ItemObtainedFromFarmable[];
     item_gives_knowledges?: ItemGivesKnowledge[];
+    exchangelist?: Exchangelist[];
     main_category?: string;
     sub_category?: string;
     db_type?: string;
@@ -102,4 +104,19 @@ export interface QuestReward {
     amount: number;
     is_select: boolean;
     db_entity?: IngredientDTO;
+}
+
+export interface Exchangelist {
+    output?: IngredientDTO[];
+    input?: IngredientDTO[];
+    conditions?: Array<Condition[]>;
+    npc?: ItemSummonsMount[];
+}
+
+export interface ItemSummonsMount {
+    id: number;
+    sub_id?: number;
+    name: string;
+    icon_image: string;
+    db_type: string;
 }
