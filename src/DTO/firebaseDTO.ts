@@ -1,4 +1,4 @@
 export interface IngrediantsMarketPriceDTO {
-  itemId: number;
-  marketPrice: number;
+    itemId: number;
+    marketPrice: number;
 }
