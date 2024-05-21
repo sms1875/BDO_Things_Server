@@ -1,5 +1,5 @@
 import morgan, { StreamOptions } from "morgan";
-import logger from "./logger";
+import logger from "../config/logger";
 
 const combined =
     ':remote-addr - :remote-user ":method :url HTTP/:http-version" :status :res[content-length] ":referrer" ":user-agent"';

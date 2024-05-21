@@ -18,7 +18,7 @@ interface Config {
 }
 
 const config: Config = {
-    port: process.env.PORT
+    port: process.env.PORT || "8080"
     /*
     firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY ?? "YOUR_API_KEY",
