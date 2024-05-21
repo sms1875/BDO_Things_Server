@@ -1,22 +1,13 @@
-import { initializeApp, FirebaseApp } from "firebase/app";
+import { initializeApp } from "firebase-admin/app";
 import {
-    Firestore,
     getFirestore,
-    doc,
-    getDoc,
-    setDoc,
-    collection,
-    getDocs,
-    query,
-    where,
-    updateDoc,
-    deleteDoc,
-    writeBatch,
-    WriteBatch,
+    Firestore,
     DocumentReference,
-    DocumentData
-} from "firebase/firestore";
-import config from "../config/config";
+    DocumentData,
+    WriteBatch
+} from "firebase-admin/firestore";
+import { credential } from "firebase-admin";
+import logger from "../config/logger"; // 로그 모듈 임포트
 
 interface IFirebaseService {
     documentExists(collectionName: string, id: string): Promise<boolean>;
@@ -47,7 +38,6 @@ interface IFirebaseService {
 }
 
 class FirebaseService implements IFirebaseService {
-    private app!: FirebaseApp;
     private db!: Firestore;
 
     constructor() {
@@ -55,17 +45,37 @@ class FirebaseService implements IFirebaseService {
     }
 
     private initializeFirebase(): void {
-        this.app = initializeApp(config.firebaseConfig);
-        this.db = getFirestore(this.app);
+        logger.info(
+            "Initializing Firebase with application default credentials"
+        ); // 로그 메시지 구체화
+        try {
+            initializeApp({
+                credential: credential.applicationDefault()
+            });
+            this.db = getFirestore();
+            logger.info("Firebase initialized successfully");
+        } catch (error) {
+            logger.error("Error initializing Firebase", error);
+            throw error;
+        }
     }
 
     public async documentExists(
         collectionName: string,
         id: string
     ): Promise<boolean> {
-        const docRef = doc(this.db, collectionName, id);
-        const docSnapshot = await getDoc(docRef);
-        return docSnapshot.exists();
+        logger.info(`Checking if document exists: ${collectionName}/${id}`);
+        try {
+            const docRef = this.db.collection(collectionName).doc(id);
+            const docSnapshot = await docRef.get();
+            return docSnapshot.exists;
+        } catch (error) {
+            logger.error(
+                `Error checking document existence: ${collectionName}/${id}`,
+                error
+            );
+            throw error;
+        }
     }
 
     public async addDocument<T extends DocumentData>(
@@ -73,20 +83,39 @@ class FirebaseService implements IFirebaseService {
         data: T,
         id: string
     ): Promise<void> {
-        const docRef = doc(this.db, collectionName, id);
-        await setDoc(docRef, data);
+        logger.info(`Adding document: ${collectionName}/${id}`);
+        try {
+            const docRef = this.db.collection(collectionName).doc(id);
+            await docRef.set(data);
+            logger.info(`Document added successfully: ${collectionName}/${id}`);
+        } catch (error) {
+            logger.error(
+                `Error adding document: ${collectionName}/${id}`,
+                error
+            );
+            throw error;
+        }
     }
 
     public async getDocument<T extends DocumentData>(
         collectionName: string,
         id: string
     ): Promise<T | null> {
-        const docRef = doc(this.db, collectionName, id);
-        const docSnapshot = await getDoc(docRef);
-        if (docSnapshot.exists()) {
-            return docSnapshot.data() as T;
+        logger.info(`Getting document: ${collectionName}/${id}`);
+        try {
+            const docRef = this.db.collection(collectionName).doc(id);
+            const docSnapshot = await docRef.get();
+            if (docSnapshot.exists) {
+                return docSnapshot.data() as T;
+            }
+            return null;
+        } catch (error) {
+            logger.error(
+                `Error getting document: ${collectionName}/${id}`,
+                error
+            );
+            throw error;
         }
-        return null;
     }
 
     public async updateDocument<T extends DocumentData>(
@@ -94,29 +123,62 @@ class FirebaseService implements IFirebaseService {
         data: T,
         id: string
     ): Promise<void> {
-        const docRef = doc(this.db, collectionName, id);
-        await updateDoc(docRef, data);
+        logger.info(`Updating document: ${collectionName}/${id}`);
+        try {
+            const docRef = this.db.collection(collectionName).doc(id);
+            await docRef.update(data);
+            logger.info(
+                `Document updated successfully: ${collectionName}/${id}`
+            );
+        } catch (error) {
+            logger.error(
+                `Error updating document: ${collectionName}/${id}`,
+                error
+            );
+            throw error;
+        }
     }
 
     public async deleteDocument(
         collectionName: string,
         id: string
     ): Promise<void> {
-        const docRef = doc(this.db, collectionName, id);
-        await deleteDoc(docRef);
+        logger.info(`Deleting document: ${collectionName}/${id}`);
+        try {
+            const docRef = this.db.collection(collectionName).doc(id);
+            await docRef.delete();
+            logger.info(
+                `Document deleted successfully: ${collectionName}/${id}`
+            );
+        } catch (error) {
+            logger.error(
+                `Error deleting document: ${collectionName}/${id}`,
+                error
+            );
+            throw error;
+        }
     }
 
     public async getDocuments<T extends DocumentData>(
         collectionName: string
     ): Promise<T[]> {
-        const querySnapshot = await getDocs(
-            collection(this.db, collectionName)
-        );
-        const documents: T[] = [];
-        querySnapshot.forEach((doc) => {
-            documents.push(doc.data() as T);
-        });
-        return documents;
+        logger.info(`Getting documents from collection: ${collectionName}`);
+        try {
+            const querySnapshot = await this.db
+                .collection(collectionName)
+                .get();
+            const documents: T[] = [];
+            querySnapshot.forEach((doc) => {
+                documents.push(doc.data() as T);
+            });
+            return documents;
+        } catch (error) {
+            logger.error(
+                `Error getting documents from collection: ${collectionName}`,
+                error
+            );
+            throw error;
+        }
     }
 
     public async getDocumentsWhere<T extends DocumentData>(
@@ -124,28 +186,47 @@ class FirebaseService implements IFirebaseService {
         fieldName: string,
         fieldValue: unknown
     ): Promise<T[]> {
-        const q = query(
-            collection(this.db, collectionName),
-            where(fieldName, "==", fieldValue)
+        logger.info(
+            `Getting documents where ${fieldName}=${fieldValue} from collection: ${collectionName}`
         );
-        const querySnapshot = await getDocs(q);
-        const documents: T[] = [];
-        querySnapshot.forEach((doc) => {
-            documents.push(doc.data() as T);
-        });
-        return documents;
+        try {
+            const querySnapshot = await this.db
+                .collection(collectionName)
+                .where(fieldName, "==", fieldValue)
+                .get();
+            const documents: T[] = [];
+            querySnapshot.forEach((doc) => {
+                documents.push(doc.data() as T);
+            });
+            return documents;
+        } catch (error) {
+            logger.error(
+                `Error getting documents where ${fieldName}=${fieldValue} from collection: ${collectionName}`,
+                error
+            );
+            throw error;
+        }
     }
 
     public createBatch(): WriteBatch {
-        return writeBatch(this.db);
+        logger.info("Creating batch");
+        return this.db.batch();
     }
 
     public async commitBatch(batch: WriteBatch): Promise<void> {
-        await batch.commit();
+        logger.info("Committing batch");
+        try {
+            await batch.commit();
+            logger.info("Batch committed successfully");
+        } catch (error) {
+            logger.error("Error committing batch", error);
+            throw error;
+        }
     }
 
     public doc(collectionName: string, id: string): DocumentReference {
-        return doc(this.db, collectionName, id);
+        logger.info(`Getting document reference: ${collectionName}/${id}`);
+        return this.db.collection(collectionName).doc(id);
     }
 }
 
