@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import firebaseService from "../services/firebaseService";
-import { IngrediantsMarketPriceDTO } from "../types/firebaseDTO";
+import { SearchedItemDTO } from "../types/marketDTO";
 import { FIREBASE_COLLECTIONS } from "../constants";
 import logger from "../config/logger";
 
@@ -20,7 +20,7 @@ router.get(
     "/getIngrediantsMarketPrice",
     async (req: Request, res: Response) => {
         try {
-            const documents: IngrediantsMarketPriceDTO[] =
+            const documents: SearchedItemDTO[] =
                 await firebaseService.getDocuments(
                     FIREBASE_COLLECTIONS.INGREDIANTS_MARKETPRICE
                 );

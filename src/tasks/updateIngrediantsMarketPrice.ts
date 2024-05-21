@@ -2,8 +2,8 @@ import firebaseService from "../services/firebaseService";
 import MarketApi from "../services/marketApiService";
 import { FIREBASE_COLLECTIONS, MARKET_API_URLS } from "../constants";
 import { ItemDTO } from "../types/bdolyticsDTO";
-import { IngrediantsMarketPriceDTO } from "../types/firebaseDTO";
 import logger from "../config/logger";
+import { SearchedItemDTO } from "../types/marketDTO";
 
 // 캐시된 원자재 데이터
 let cachedIngredients: ItemDTO[] = [];
@@ -45,17 +45,13 @@ const updateIngrediantsMarketPrice = async (): Promise<void> => {
         // 일괄 작업을 생성합니다.
         const batch = firebaseService.createBatch();
 
-        for (const item of searchResult) {
-            const marketPriceDTO: IngrediantsMarketPriceDTO = {
-                itemId: item.itemId,
-                marketPrice: item.basePrice
-            };
+        searchResult.forEach((item) => {
             const itemRef = firebaseService.doc(
                 FIREBASE_COLLECTIONS.INGREDIANTS_MARKETPRICE,
                 item.itemId.toString()
             );
-            batch.set(itemRef, marketPriceDTO);
-        }
+            batch.set(itemRef, item);
+        });
 
         // 일괄 작업을 커밋합니다.
         await firebaseService.commitBatch(batch);

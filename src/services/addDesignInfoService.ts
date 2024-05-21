@@ -3,7 +3,7 @@ import BdolyticsApi from "./bdolyticsApiService";
 import { DesignDTO, ItemDTO } from "../types/bdolyticsDTO";
 import { BDOLYTICS_API_URLS } from "../constants";
 import logger from "../config/logger";
-import { WriteBatch } from "firebase/firestore";
+import { WriteBatch } from "firebase-admin/firestore";
 
 class addDesignInfoService {
     /**
