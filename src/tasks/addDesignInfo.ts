@@ -2,6 +2,7 @@ import { FIREBASE_COLLECTIONS } from "../constants";
 import addDesignInfoService from "../services/addDesignInfoService";
 
 const addDesignInfo = {
+    // 가공무역 데이터 추가
     addCrateDesignInfo: async () => {
         await addDesignInfoService.addData(
             9200,
@@ -13,6 +14,7 @@ const addDesignInfo = {
         );
     },
 
+    // 범선, 호위선, 숲길 마차 데이터 추가
     addMountDesignInfo: async () => {
         await addDesignInfoService.addData(
             8510,

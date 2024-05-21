@@ -14,11 +14,12 @@ interface FirebaseConfig {
 
 interface Config {
     port: string | undefined;
-    firebaseConfig: FirebaseConfig;
+    //firebaseConfig: FirebaseConfig;
 }
 
 const config: Config = {
-    port: process.env.PORT,
+    port: process.env.PORT
+    /*
     firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY ?? "YOUR_API_KEY",
         authDomain: process.env.FIREBASE_AUTH_DOMAIN ?? "YOUR_AUTH_DOMAIN",
@@ -32,6 +33,7 @@ const config: Config = {
         measurementId:
             process.env.FIREBASE_MEASUREMENT_ID || "YOUR_MEASUREMENT_ID"
     }
+    */
 };
 
 export default config;
