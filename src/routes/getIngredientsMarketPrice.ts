@@ -17,7 +17,7 @@ const router = express.Router();
  * @param {Response} res - 응답 객체
  */
 router.get(
-    "/getIngrediantsMarketPrice",
+    "/getIngredientsMarketPrice",
     async (req: Request, res: Response) => {
         try {
             const documents: SearchedItemDTO[] =
