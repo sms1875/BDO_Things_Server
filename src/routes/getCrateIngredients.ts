@@ -6,7 +6,7 @@ import logger from "../config/logger";
 
 const router = express.Router();
 
-router.get("/getCrateIngrediants", async (req: Request, res: Response) => {
+router.get("/getCrateIngredients", async (req: Request, res: Response) => {
     try {
         let documents: ItemDTO[] = await firebaseService.getDocuments(
             FIREBASE_COLLECTIONS.CRATE_INGREDIENT

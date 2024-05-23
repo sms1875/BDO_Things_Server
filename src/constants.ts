@@ -16,7 +16,7 @@ export const FIREBASE_COLLECTIONS = {
     MOUNT_DESIGN: "mountDesign",
     MOUNT_PRODUCT: "mountProduct",
     MOUNT_INGREDIENT: "mountIngredient",
-    INGREDIANTS_MARKETPRICE: "ingrediantsMarketPrice",
+    INGREDIENTS_MARKETPRICE: "ingrediantsMarketPrice",
     DESIGN: "design",
     ITEM: "item"
 };

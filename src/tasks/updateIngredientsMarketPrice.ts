@@ -30,7 +30,7 @@ const initCachedIngredients = async (): Promise<void> => {
  * - 캐시된 원자재 데이터를 활용하여 불필요한 네트워크 요청을 줄입니다.
  * - 일괄 작업을 활용하여 성능을 개선하고 Firebase 비용을 절감합니다.
  */
-const updateIngrediantsMarketPrice = async (): Promise<void> => {
+const updateIngredientsMarketPrice = async (): Promise<void> => {
     try {
         if (!isInitiated) await initCachedIngredients();
 
@@ -47,7 +47,7 @@ const updateIngrediantsMarketPrice = async (): Promise<void> => {
 
         searchResult.forEach((item) => {
             const itemRef = firebaseService.doc(
-                FIREBASE_COLLECTIONS.INGREDIANTS_MARKETPRICE,
+                FIREBASE_COLLECTIONS.INGREDIENTS_MARKETPRICE,
                 item.itemId.toString()
             );
             batch.set(itemRef, item);
@@ -62,4 +62,4 @@ const updateIngrediantsMarketPrice = async (): Promise<void> => {
     }
 };
 
-export default updateIngrediantsMarketPrice;
+export default updateIngredientsMarketPrice;

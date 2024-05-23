@@ -22,7 +22,7 @@ router.get(
         try {
             const documents: SearchedItemDTO[] =
                 await firebaseService.getDocuments(
-                    FIREBASE_COLLECTIONS.INGREDIANTS_MARKETPRICE
+                    FIREBASE_COLLECTIONS.INGREDIENTS_MARKETPRICE
                 );
 
             // 응답합니다.
