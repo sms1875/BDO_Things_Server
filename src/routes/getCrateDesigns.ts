@@ -16,7 +16,7 @@ const router = express.Router();
  * @param {Request} req - 요청 객체
  * @param {Response} res - 응답 객체
  */
-router.get("/getDesignDetails", async (req: Request, res: Response) => {
+router.get("/getCrateDesigns", async (req: Request, res: Response) => {
     try {
         let documents: DesignDTO[] = await firebaseService.getDocuments(
             FIREBASE_COLLECTIONS.CRATE_DESIGN
