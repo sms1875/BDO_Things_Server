@@ -2,9 +2,9 @@ import express from "express";
 import marketWaitListRouter from "./getMarketWaitList";
 import getWorldMarketSearchList from "./getWorldMarketSearchList";
 import getCrateDesigns from "./getCrateDesigns";
-import getingrediantsMarketPrice from "./getIngrediantsMarketPrice";
+import getingredientsMarketPrice from "./getIngredientsMarketPrice";
 import getCrateProducts from "./getCrateProducts";
-import getCrateIngrediants from "./getCrateIngrediants";
+import getCrateIngredients from "./getCrateIngredients";
 
 const router = express.Router();
 
@@ -12,8 +12,8 @@ router.use("/", marketWaitListRouter);
 router.use("/", getWorldMarketSearchList);
 router.use("/", getCrateDesigns);
 router.use("/", getCrateProducts);
-router.use("/", getCrateIngrediants);
-router.use("/", getingrediantsMarketPrice);
+router.use("/", getCrateIngredients);
+router.use("/", getingredientsMarketPrice);
 
 // hello world 출력
 router.get("/", (req, res) => {

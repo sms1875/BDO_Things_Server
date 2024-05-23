@@ -1,6 +1,6 @@
 import schedule from "node-schedule";
 import updateMarketWaitList from "../tasks/updateMarketWaitList";
-import updateIngredientsMarketPrice from "../tasks/updateIngrediantsMarketPrice";
+import updateIngredientsMarketPrice from "../tasks/updateIngredientsMarketPrice";
 
 // 스케줄러 시작 함수
 export const scheduleJobs = () => {
