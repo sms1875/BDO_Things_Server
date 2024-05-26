@@ -6,6 +6,7 @@ import getingredientsMarketPrice from "./getIngredientsMarketPrice";
 import getCrateProducts from "./getCrateProducts";
 import getCrateIngredients from "./getCrateIngredients";
 import getItemImage from "./getItemImage";
+import logger from "../config/logger";
 
 const router = express.Router();
 
@@ -22,6 +23,11 @@ router.use("/", getItemImage);
 // hello world 출력
 router.get("/", (req, res) => {
     res.send("Hello World!");
+});
+
+process.on("uncaughtException", (err) => {
+    logger.error("Unhandled Exception:", err);
+    process.exit(1); // 서버 종료
 });
 
 export default router;

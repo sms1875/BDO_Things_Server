@@ -3,7 +3,6 @@ import MarketApi from "../services/marketApiService";
 import { FIREBASE_COLLECTIONS, MARKET_API_URLS } from "../constants";
 import { ItemDTO } from "../types/bdolyticsDTO";
 import logger from "../config/logger";
-import { SearchedItemDTO } from "../types/marketDTO";
 
 // 캐시된 원자재 데이터
 let cachedIngredients: ItemDTO[] = [];
@@ -14,11 +13,15 @@ let isInitiated = false;
  * 원자재 데이터를 초기화합니다.
  */
 const initCachedIngredients = async (): Promise<void> => {
-    cachedIngredients = await firebaseService.getDocuments<ItemDTO>(
-        FIREBASE_COLLECTIONS.CRATE_INGREDIENT
-    );
-    isInitiated = true;
-    logger.info("캐시된 원자재 데이터가 초기화되었습니다.");
+    try {
+        cachedIngredients = await firebaseService.getDocuments<ItemDTO>(
+            FIREBASE_COLLECTIONS.CRATE_INGREDIENT
+        );
+        isInitiated = true;
+        logger.info("원자재 데이터가 초기화되었습니다.");
+    } catch (error) {
+        logger.error(`원자재 데이터 초기화 실패 : ${error}`);
+    }
 };
 
 /**
@@ -32,8 +35,11 @@ const initCachedIngredients = async (): Promise<void> => {
  */
 const updateIngredientsMarketPrice = async (): Promise<void> => {
     try {
-        if (!isInitiated) await initCachedIngredients();
-
+        if (!isInitiated) {
+            await initCachedIngredients();
+            // 초기화 실패 시 바로 함수를 종료합니다.
+            if (!isInitiated) return;
+        }
         const ingredientIds = cachedIngredients.map(
             (ingredient) => ingredient.id
         );

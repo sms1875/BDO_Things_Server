@@ -6,7 +6,7 @@ const addDesignInfo = {
     addCrateDesignInfo: async () => {
         await addDesignInfoService.addData(
             9200,
-            9602,
+            9692,
             FIREBASE_COLLECTIONS.CRATE_DESIGN,
             FIREBASE_COLLECTIONS.CRATE_PRODUCT,
             FIREBASE_COLLECTIONS.CRATE_INGREDIENT,
