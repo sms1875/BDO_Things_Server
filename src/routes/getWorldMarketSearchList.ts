@@ -5,8 +5,6 @@ import logger from "../config/logger";
 
 const router = express.Router();
 
-router.use(express.json());
-
 /**
  * 아이템 검색 결과를 가져와 응답합니다.
  *
