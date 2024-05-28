@@ -5,12 +5,17 @@ import { FIREBASE_COLLECTIONS } from "../constants";
 import logger from "../config/logger";
 
 const router = express.Router();
+const cached = new Map<string, ItemDTO[]>();
 
 router.get("/getCrateIngredients", async (req: Request, res: Response) => {
     try {
+        if (cached.has("getCrateIngredients")) {
+            return res.status(200).json(cached.get("getCrateIngredients"));
+        }
         let documents: ItemDTO[] = await firebaseService.getDocuments(
             FIREBASE_COLLECTIONS.CRATE_INGREDIENT
         );
+        cached.set("getCrateIngredients", documents);
 
         res.status(200).json(documents);
     } catch (error) {

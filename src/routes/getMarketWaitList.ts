@@ -5,7 +5,7 @@ import { FIREBASE_COLLECTIONS } from "../constants";
 import logger from "../config/logger";
 
 const router = express.Router();
-
+const cached = new Map();
 /**
  * 거래소 대기 상품 목록을 가져와 응답합니다.
  *
@@ -18,10 +18,14 @@ const router = express.Router();
  */
 router.get("/getMarketWaitList", async (req: Request, res: Response) => {
     try {
+        if (cached.has("cached")) {
+            return res.status(200).json(cached.get("cached"));
+        }
         const documents: WaitListItemDTO[] = await firebaseService.getDocuments(
             FIREBASE_COLLECTIONS.MARKET_WAIT_LIST
         );
 
+        cached.set("cached", documents);
         // 응답합니다.
         res.status(200).json(documents);
     } catch (error) {

@@ -36,7 +36,7 @@ class App {
     }
 
     private scheduleJobs() {
-        scheduleJobs();
+        //scheduleJobs();
     }
 }
 

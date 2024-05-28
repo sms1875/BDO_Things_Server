@@ -6,6 +6,8 @@ import logger from "../config/logger";
 
 const router = express.Router();
 
+const cached = new Map<string, SearchedItemDTO[]>();
+
 /**
  * 가공 무역 레시피 정보를 가져와 응답합니다.
  *
@@ -20,11 +22,15 @@ router.get(
     "/getIngredientsMarketPrice",
     async (req: Request, res: Response) => {
         try {
+            if (cached.has("cached")) {
+                return res.status(200).json(cached.get("cached"));
+            }
             const documents: SearchedItemDTO[] =
                 await firebaseService.getDocuments(
                     FIREBASE_COLLECTIONS.INGREDIENTS_MARKETPRICE
                 );
 
+            cached.set("cached", documents);
             // 응답합니다.
             res.status(200).json(documents);
         } catch (error) {
