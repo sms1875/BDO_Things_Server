@@ -8,6 +8,7 @@ import {
 } from "firebase-admin/firestore";
 import { credential } from "firebase-admin";
 import logger from "../config/logger"; // 로그 모듈 임포트
+import config from "../config/config";
 
 interface IFirebaseService {
     documentExists(collectionName: string, id: string): Promise<boolean>;
@@ -50,7 +51,7 @@ class FirebaseService implements IFirebaseService {
         ); // 로그 메시지 구체화
         try {
             initializeApp({
-                credential: credential.applicationDefault()
+                credential: credential.cert(config.serviceAccount)
             });
             this.db = getFirestore();
             logger.info("Firebase initialized successfully");

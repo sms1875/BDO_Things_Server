@@ -13,11 +13,17 @@ let isInitiated = false;
  * 캐시된 대기 상품 목록 데이터를 초기화합니다.
  */
 const initCachedWaitListData = async (): Promise<void> => {
-    cachedWaitListData = await firebaseService.getDocuments<WaitListItemDTO>(
-        FIREBASE_COLLECTIONS.MARKET_WAIT_LIST
-    );
-    isInitiated = true; // 초기화 후 플래그를 true로 설정합니다.
-    logger.info("캐시된 대기 상품 목록 데이터가 초기화되었습니다.");
+    try {
+        cachedWaitListData =
+            await firebaseService.getDocuments<WaitListItemDTO>(
+                FIREBASE_COLLECTIONS.MARKET_WAIT_LIST
+            );
+        isInitiated = true; // 초기화 후 플래그를 true로 설정합니다.
+        logger.info("대기 상품 목록 데이터가 초기화되었습니다.");
+    } catch (error) {
+        logger.error(`대기 상품 목록 데이터 초기화 실패 : ${error}`);
+        return;
+    }
 };
 
 /**
@@ -53,8 +59,12 @@ const getChangedItems = (
  * - 일괄 작업을 활용하여 성능을 개선하고 Firebase 비용을 절감합니다.
  */
 const updateMarketWaitList = async (): Promise<void> => {
-    if (!isInitiated) await initCachedWaitListData();
     try {
+        if (!isInitiated) {
+            await initCachedWaitListData();
+            // 초기화 실패 시 바로 함수를 종료합니다.
+            if (!isInitiated) return;
+        }
         // 거래소 API를 통해 대기 중인 상품 목록을 가져옵니다.
         const marketWaitList = await MarketApi.getWorldMarketWaitList(
             MARKET_API_URLS.KR

@@ -4,6 +4,7 @@ import { DesignDTO } from "../types/bdolyticsDTO";
 import { FIREBASE_COLLECTIONS } from "../constants";
 import logger from "../config/logger";
 
+const cached = new Map<string, DesignDTO[]>();
 const router = express.Router();
 
 /**
@@ -16,8 +17,11 @@ const router = express.Router();
  * @param {Request} req - 요청 객체
  * @param {Response} res - 응답 객체
  */
-router.get("/getDesignDetails", async (req: Request, res: Response) => {
+router.get("/getCrateDesigns", async (req: Request, res: Response) => {
     try {
+        if (cached.has("cached")) {
+            return res.status(200).json(cached.get("cached"));
+        }
         let documents: DesignDTO[] = await firebaseService.getDocuments(
             FIREBASE_COLLECTIONS.CRATE_DESIGN
         );
@@ -25,12 +29,13 @@ router.get("/getDesignDetails", async (req: Request, res: Response) => {
         // 각 문서에 필터를 적용합니다.
         documents = documents.map(filterDesignData);
 
+        cached.set("cached", documents);
         // 응답합니다.
         res.status(200).json(documents);
     } catch (error) {
         logger.error("가공 무역 레시피 정보를 가져오는 중 에러 발생:", error);
         res.status(500).json({
-            error: "가공 무역 레시피 정보를 가져오는 중 에러 발생"
+            error: `getCrateDesigns error : ${error}`
         });
     }
 });

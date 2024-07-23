@@ -14,11 +14,13 @@ interface FirebaseConfig {
 
 interface Config {
     port: string | undefined;
+    serviceAccount: any;
     //firebaseConfig: FirebaseConfig;
 }
 
 const config: Config = {
-    port: process.env.PORT || "8080"
+    port: process.env.PORT || "8080",
+    serviceAccount: JSON.parse(process.env.FIREBASE_ADMIN_CREDENTIALS || "{}")
     /*
     firebaseConfig: {
         apiKey: process.env.FIREBASE_API_KEY ?? "YOUR_API_KEY",
